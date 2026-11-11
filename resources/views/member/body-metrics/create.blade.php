@@ -1,149 +1,175 @@
 <x-app-layout>
-    <div class="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900">
-        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            
-            <!-- Header -->
-            <div class="mb-8">
-                <h1 class="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-500">
-                    📝 Input Metrik Tubuh
-                </h1>
-                <p class="text-gray-400 mt-2">Catat komposisi tubuh Anda hari ini</p>
+    <div class="max-w-4xl mx-auto">
+        
+        <!-- Header -->
+        <div class="mb-8">
+            <div class="inline-flex items-center gap-2 px-3 py-1 bg-surface-glass border border-border-default mb-3 backdrop-blur-md rounded">
+                <span class="w-1.5 h-1.5 bg-primary-container rounded-none pulse-volt"></span>
+                <span class="font-label-tag text-label-tag text-text-muted tracking-widest uppercase">
+                    [ ENTRY // BIOMETRIC CALIBRATION ]
+                </span>
+            </div>
+            <h1 class="text-display-section-mobile md:text-headline-lg font-headline-lg font-extrabold uppercase tracking-tight text-text-primary">
+                INPUT METRIK <span class="text-primary-container">TUBUH</span>.
+            </h1>
+            <p class="font-body-base text-text-secondary text-sm md:text-base mt-2">
+                Masukkan parameter berat badan dan estimasi komposisi tubuh untuk komputasi otomatis BMI dan rekomendasi beban.
+            </p>
+        </div>
+
+        <!-- Latest Metric Reference Banner -->
+        @if($latestMetric)
+            <div class="bg-surface-card border border-border-default rounded p-5 mb-8 backdrop-blur-md">
+                <div class="flex items-center justify-between pb-3 border-b border-border-default mb-3">
+                    <span class="font-label-tag text-xs text-primary-container tracking-wider uppercase">
+                        [ REKAMAN TERAKHIR: {{ $latestMetric->recorded_at->format('d M Y') }} ]
+                    </span>
+                    <span class="font-label-meta text-[11px] text-text-muted">
+                        {{ $latestMetric->recorded_at->diffForHumans() }}
+                    </span>
+                </div>
+                <div class="grid grid-cols-2 sm:grid-cols-5 gap-3 font-label-code">
+                    <div class="p-2.5 bg-surface-container-lowest border border-border-default rounded">
+                        <span class="text-[10px] text-text-muted uppercase font-label-meta block">BERAT</span>
+                        <span class="text-text-primary font-bold">{{ $latestMetric->weight }} KG</span>
+                    </div>
+                    <div class="p-2.5 bg-surface-container-lowest border border-border-default rounded">
+                        <span class="text-[10px] text-text-muted uppercase font-label-meta block">BMI</span>
+                        <span class="text-primary-container font-bold">{{ $latestMetric->bmi }}</span>
+                    </div>
+                    <div class="p-2.5 bg-surface-container-lowest border border-border-default rounded">
+                        <span class="text-[10px] text-text-muted uppercase font-label-meta block">LEMAK</span>
+                        <span class="text-status-warning font-bold">{{ $latestMetric->body_fat_percentage ?? '--' }}%</span>
+                    </div>
+                    <div class="p-2.5 bg-surface-container-lowest border border-border-default rounded">
+                        <span class="text-[10px] text-text-muted uppercase font-label-meta block">OTOT</span>
+                        <span class="text-primary-container font-bold">{{ $latestMetric->muscle_mass_percentage ?? '--' }}%</span>
+                    </div>
+                    <div class="p-2.5 bg-surface-container-lowest border border-border-default rounded">
+                        <span class="text-[10px] text-text-muted uppercase font-label-meta block">AIR</span>
+                        <span class="text-text-secondary font-bold">{{ $latestMetric->water_percentage ?? '--' }}%</span>
+                    </div>
+                </div>
+            </div>
+        @endif
+
+        <!-- Form -->
+        <form action="{{ route('member.body-metrics.store') }}" method="POST" class="space-y-6">
+            @csrf
+
+            <!-- Date -->
+            <div class="bg-surface-vault border border-border-default rounded p-6 backdrop-blur-md">
+                <label class="block font-label-code text-xs uppercase tracking-wider text-text-primary mb-2">
+                    TANGGAL LOGGING *
+                </label>
+                <input type="date" name="recorded_at" value="{{ old('recorded_at', date('Y-m-d')) }}" 
+                       class="w-full bg-surface-container-low border border-border-subtle rounded px-4 py-3 text-text-primary font-label-code text-sm focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-all" required>
+                @error('recorded_at')
+                    <p class="text-status-error font-label-code text-xs mt-2">{{ $message }}</p>
+                @enderror
             </div>
 
-            <!-- Latest Metric Reference -->
-            @if($latestMetric)
-                <div class="bg-gray-800 rounded-2xl p-6 mb-8 border border-gray-700">
-                    <h3 class="text-lg font-bold text-white mb-4">📊 Terakhir Dicatat ({{ $latestMetric->recorded_at->format('d M Y') }})</h3>
-                    <div class="grid grid-cols-3 md:grid-cols-5 gap-4 text-center">
-                        <div>
-                            <p class="text-gray-400 text-sm">Berat</p>
-                            <p class="text-xl font-bold text-cyan-400">{{ $latestMetric->weight }} kg</p>
-                        </div>
-                        <div>
-                            <p class="text-gray-400 text-sm">BMI</p>
-                            <p class="text-xl font-bold text-cyan-400">{{ $latestMetric->bmi }}</p>
-                        </div>
-                        @if($latestMetric->body_fat_percentage)
-                            <div>
-                                <p class="text-gray-400 text-sm">Lemak Tubuh</p>
-                                <p class="text-xl font-bold text-orange-400">{{ $latestMetric->body_fat_percentage }}%</p>
-                            </div>
-                        @endif
-                        @if($latestMetric->muscle_mass_percentage)
-                            <div>
-                                <p class="text-gray-400 text-sm">Otot</p>
-                                <p class="text-xl font-bold text-red-400">{{ $latestMetric->muscle_mass_percentage }}%</p>
-                            </div>
-                        @endif
-                        @if($latestMetric->water_percentage)
-                            <div>
-                                <p class="text-gray-400 text-sm">Kadar Air</p>
-                                <p class="text-xl font-bold text-blue-400">{{ $latestMetric->water_percentage }}%</p>
-                            </div>
-                        @endif
+            <!-- Basic Measurements -->
+            <div class="bg-surface-vault border border-border-default rounded p-6 backdrop-blur-md">
+                <div class="flex items-center gap-2 pb-3 border-b border-border-default mb-4">
+                    <span class="material-symbols-outlined text-primary-container text-base">scale</span>
+                    <h3 class="font-headline-sm font-bold text-xs uppercase tracking-wider text-text-primary">
+                        PENGUKURAN DASAR (WAJIB)
+                    </h3>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block font-label-meta text-[11px] text-text-muted uppercase tracking-wider mb-2">
+                            BERAT BADAN (KG) *
+                        </label>
+                        <input type="number" name="weight" value="{{ old('weight', $latestMetric?->weight) }}" 
+                               step="0.01" min="20" max="500" required
+                               class="w-full bg-surface-container-low border border-border-subtle rounded px-4 py-3 text-text-primary font-label-code text-sm focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-all"
+                               placeholder="Contoh: 72.5">
+                        @error('weight')
+                            <p class="text-status-error font-label-code text-xs mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+                    <div>
+                        <label class="block font-label-meta text-[11px] text-text-muted uppercase tracking-wider mb-2">
+                            TINGGI BADAN (CM) *
+                        </label>
+                        <input type="number" name="height" value="{{ old('height', $latestMetric?->height) }}" 
+                               step="0.01" min="50" max="300" required
+                               class="w-full bg-surface-container-low border border-border-subtle rounded px-4 py-3 text-text-primary font-label-code text-sm focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-all"
+                               placeholder="Contoh: 175">
+                        @error('height')
+                            <p class="text-status-error font-label-code text-xs mt-1">{{ $message }}</p>
+                        @enderror
                     </div>
                 </div>
-            @endif
+            </div>
 
-            <!-- Form -->
-            <form action="{{ route('member.body-metrics.store') }}" method="POST" class="space-y-6">
-                @csrf
-
-                <!-- Date -->
-                <div class="bg-gray-800 rounded-2xl p-6 border border-gray-700">
-                    <label class="block text-white font-bold mb-2">📅 Tanggal</label>
-                    <input type="date" name="recorded_at" value="{{ old('recorded_at', date('Y-m-d')) }}" 
-                           class="w-full bg-gray-700 border border-gray-600 rounded-xl px-4 py-3 text-white 
-                                  focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-all" required>
-                    @error('recorded_at')
-                        <p class="text-red-500 text-sm mt-2">{{ $message }}</p>
-                    @enderror
+            <!-- Body Composition (Optional) -->
+            <div class="bg-surface-vault border border-border-default rounded p-6 backdrop-blur-md">
+                <div class="flex items-center gap-2 pb-3 border-b border-border-default mb-4">
+                    <span class="material-symbols-outlined text-primary-container text-base">pie_chart</span>
+                    <h3 class="font-headline-sm font-bold text-xs uppercase tracking-wider text-text-primary">
+                        ESTIMASI KOMPOSISI TUBUH (OPSIONAL)
+                    </h3>
                 </div>
-
-                <!-- Basic Measurements (Required) -->
-                <div class="bg-gray-800 rounded-2xl p-6 border border-gray-700">
-                    <h3 class="text-lg font-bold text-white mb-4">⚖️ Pengukuran Dasar (Wajib)</h3>
-                    <div class="grid grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-gray-400 text-sm mb-2">Berat Badan (kg) *</label>
-                            <input type="number" name="weight" value="{{ old('weight', $latestMetric?->weight) }}" 
-                                   step="0.01" min="20" max="500" required
-                                   class="w-full bg-gray-700 border border-gray-600 rounded-xl px-4 py-3 text-white 
-                                          focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-all"
-                                   placeholder="70.5">
-                            @error('weight')
-                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                            @enderror
-                        </div>
-                        <div>
-                            <label class="block text-gray-400 text-sm mb-2">Tinggi Badan (cm) *</label>
-                            <input type="number" name="height" value="{{ old('height', $latestMetric?->height) }}" 
-                                   step="0.01" min="50" max="300" required
-                                   class="w-full bg-gray-700 border border-gray-600 rounded-xl px-4 py-3 text-white 
-                                          focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-all"
-                                   placeholder="175">
-                            @error('height')
-                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                            @enderror
-                        </div>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div>
+                        <label class="block font-label-meta text-[11px] text-text-muted uppercase tracking-wider mb-2">
+                            LEMAK TUBUH (%)
+                        </label>
+                        <input type="number" name="body_fat_percentage" value="{{ old('body_fat_percentage') }}" 
+                               step="0.01" min="0" max="100"
+                               class="w-full bg-surface-container-low border border-border-subtle rounded px-4 py-3 text-text-primary font-label-code text-sm focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-all"
+                               placeholder="16.5">
+                    </div>
+                    <div>
+                        <label class="block font-label-meta text-[11px] text-text-muted uppercase tracking-wider mb-2">
+                            MASSA OTOT (%)
+                        </label>
+                        <input type="number" name="muscle_mass_percentage" value="{{ old('muscle_mass_percentage') }}" 
+                               step="0.01" min="0" max="100"
+                               class="w-full bg-surface-container-low border border-border-subtle rounded px-4 py-3 text-text-primary font-label-code text-sm focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-all"
+                               placeholder="42.0">
+                    </div>
+                    <div>
+                        <label class="block font-label-meta text-[11px] text-text-muted uppercase tracking-wider mb-2">
+                            KADAR AIR (%)
+                        </label>
+                        <input type="number" name="water_percentage" value="{{ old('water_percentage') }}" 
+                               step="0.01" min="0" max="100"
+                               class="w-full bg-surface-container-low border border-border-subtle rounded px-4 py-3 text-text-primary font-label-code text-sm focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-all"
+                               placeholder="58.0">
                     </div>
                 </div>
+                <p class="font-label-meta text-[10px] text-text-muted mt-3">
+                    INFO: Dapat diperoleh dari scanner InBody atau smart scale di gym compound.
+                </p>
+            </div>
 
-                <!-- Body Composition (Optional) -->
-                <div class="bg-gray-800 rounded-2xl p-6 border border-gray-700">
-                    <h3 class="text-lg font-bold text-white mb-4">💪 Komposisi Tubuh (Opsional)</h3>
-                    <div class="grid grid-cols-3 gap-4">
-                        <div>
-                            <label class="block text-gray-400 text-sm mb-2">Lemak Tubuh %</label>
-                            <input type="number" name="body_fat_percentage" value="{{ old('body_fat_percentage') }}" 
-                                   step="0.01" min="0" max="100"
-                                   class="w-full bg-gray-700 border border-gray-600 rounded-xl px-4 py-3 text-white 
-                                          focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-all"
-                                   placeholder="15.5">
-                        </div>
-                        <div>
-                            <label class="block text-gray-400 text-sm mb-2">Massa Otot %</label>
-                            <input type="number" name="muscle_mass_percentage" value="{{ old('muscle_mass_percentage') }}" 
-                                   step="0.01" min="0" max="100"
-                                   class="w-full bg-gray-700 border border-gray-600 rounded-xl px-4 py-3 text-white 
-                                          focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-all"
-                                   placeholder="40.0">
-                        </div>
-                        <div>
-                            <label class="block text-gray-400 text-sm mb-2">Kadar Air %</label>
-                            <input type="number" name="water_percentage" value="{{ old('water_percentage') }}" 
-                                   step="0.01" min="0" max="100"
-                                   class="w-full bg-gray-700 border border-gray-600 rounded-xl px-4 py-3 text-white 
-                                          focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-all"
-                                   placeholder="58.0">
-                        </div>
-                    </div>
-                    <p class="text-gray-500 text-sm mt-3">💡 Tips: Gunakan timbangan komposisi tubuh untuk mendapatkan nilai ini</p>
-                </div>
+            <!-- Notes -->
+            <div class="bg-surface-vault border border-border-default rounded p-6 backdrop-blur-md">
+                <label class="block font-label-code text-xs uppercase tracking-wider text-text-primary mb-2">
+                    CATATAN PERFORMA & KONDISI FISIK
+                </label>
+                <textarea name="notes" rows="3"
+                          class="w-full bg-surface-container-low border border-border-subtle rounded px-4 py-3 text-text-primary font-label-code text-sm focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-all resize-none"
+                          placeholder="Misal: Sesi fasted pagi hari, hidrasi optimal...">{{ old('notes') }}</textarea>
+            </div>
 
-                <!-- Notes -->
-                <div class="bg-gray-800 rounded-2xl p-6 border border-gray-700">
-                    <label class="block text-white font-bold mb-2">📝 Catatan</label>
-                    <textarea name="notes" rows="3"
-                              class="w-full bg-gray-700 border border-gray-600 rounded-xl px-4 py-3 text-white 
-                                     focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-all resize-none"
-                              placeholder="Bagaimana perasaan Anda hari ini?">{{ old('notes') }}</textarea>
-                </div>
-
-                <!-- Submit -->
+            <!-- Submit & Cancel Buttons -->
+            <div class="flex items-center gap-4">
                 <button type="submit" 
-                        class="w-full bg-gradient-to-r from-cyan-500 to-purple-500 text-white py-4 rounded-xl 
-                               font-bold text-lg hover:opacity-90 transition-all hover:scale-[1.02] shadow-lg">
-                    💾 Simpan Metrik
+                        class="flex-1 py-4 bg-primary-container hover:bg-primary-fixed text-surface-container-lowest font-label-code text-sm uppercase tracking-wider font-extrabold rounded neon-glow-btn transition-all flex items-center justify-center gap-2">
+                    <span class="material-symbols-outlined text-base">save</span>
+                    <span>SIMPAN DATA METRIK</span>
                 </button>
-            </form>
-
-            <!-- Back Button -->
-            <div class="mt-6 text-center">
-                <a href="{{ route('member.body-metrics.index') }}" class="text-gray-400 hover:text-white transition-all">
-                    ← Kembali ke Metrik Tubuh
+                <a href="{{ route('member.body-metrics.index') }}" 
+                   class="px-6 py-4 bg-surface-container hover:bg-surface-container-high border border-border-subtle text-text-muted hover:text-text-primary font-label-code text-sm uppercase tracking-wider rounded transition-all">
+                    BATAL
                 </a>
             </div>
-        </div>
+        </form>
+
     </div>
 </x-app-layout>

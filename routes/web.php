@@ -16,6 +16,10 @@ Route::middleware('guest')->group(function () {
         return view('auth.login');
     })->name('login');
 
+    Route::get('/login/admin', function () {
+        return view('auth.admin-login');
+    })->name('login.admin');
+
     Route::post('/login', function () {
 
         $credentials = request()->validate([
@@ -38,6 +42,31 @@ Route::middleware('guest')->group(function () {
 
         return back()->withErrors([
             'email' => 'Email atau password salah.',
+        ])->onlyInput('email');
+    });
+
+    Route::post('/login/admin', function () {
+        $credentials = request()->validate([
+            'email' => 'required|email',
+            'password' => 'required',
+        ]);
+
+        \Illuminate\Support\Facades\Log::info('Admin login attempt for: ' . $credentials['email']);
+
+        if (auth()->attempt($credentials, request()->boolean('remember'))) {
+            if (!auth()->user()->isAdmin()) {
+                auth()->logout();
+                return back()->withErrors([
+                    'email' => 'Akses ditolak. Akun ini bukan level staf/administrator.',
+                ])->onlyInput('email');
+            }
+
+            request()->session()->regenerate();
+            return redirect('/admin');
+        }
+
+        return back()->withErrors([
+            'email' => 'Kredensial staf/operator tidak valid.',
         ])->onlyInput('email');
     });
 
@@ -107,6 +136,7 @@ Route::middleware('auth')->prefix('member')->name('member.')->group(function () 
     // Custom Workout Types routes
     Route::get('/workout-types', [\App\Http\Controllers\Member\CustomWorkoutTypeController::class, 'index'])->name('workout-types.index');
     Route::post('/custom-workout-types', [\App\Http\Controllers\Member\CustomWorkoutTypeController::class, 'store'])->name('custom-workout-types.store');
+    Route::post('/workout-types', [\App\Http\Controllers\Member\CustomWorkoutTypeController::class, 'store'])->name('workout-types.store');
 
     // Transactions alias for payment history
     Route::get('/transactions', [PaymentController::class, 'index'])->name('transactions');

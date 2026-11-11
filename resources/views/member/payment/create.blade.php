@@ -1,118 +1,166 @@
 <x-app-layout>
-    <div class="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900">
-        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            
-            <!-- Header -->
-            <div class="mb-8">
-                <h1 class="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-500">
-                    💳 Pembayaran Membership
-                </h1>
-                <p class="text-gray-400 mt-2">Pilih paket dan upload bukti transfer</p>
+    <div class="max-w-4xl mx-auto">
+        
+        <!-- Header -->
+        <div class="mb-8">
+            <div class="inline-flex items-center gap-2 px-3 py-1 bg-surface-glass border border-border-default mb-3 backdrop-blur-md rounded">
+                <span class="w-1.5 h-1.5 bg-primary-container rounded-none pulse-volt"></span>
+                <span class="font-label-tag text-label-tag text-text-muted tracking-widest uppercase">
+                    [ RE-AUTHENTICATION // MEMBERSHIP PASS ]
+                </span>
+            </div>
+            <h1 class="text-display-section-mobile md:text-headline-lg font-headline-lg font-extrabold uppercase tracking-tight text-text-primary">
+                PEMBAYARAN <span class="text-primary-container">MEMBERSHIP</span>.
+            </h1>
+            <p class="font-body-base text-text-secondary text-sm md:text-base mt-2">
+                Pilih paket langganan gym dan unggah bukti transfer manual untuk verifikasi turnstile access pass.
+            </p>
+        </div>
+
+        <!-- Pending Transaction Warning -->
+        @if($pendingTransaction)
+            <div class="bg-surface-vault border-2 border-status-warning p-6 rounded mb-8 backdrop-blur-md">
+                <div class="flex items-start gap-4">
+                    <div class="p-2.5 bg-status-warning-container text-status-warning rounded">
+                        <span class="material-symbols-outlined text-3xl">hourglass_top</span>
+                    </div>
+                    <div>
+                        <div class="font-label-tag text-xs text-status-warning tracking-widest uppercase mb-1">
+                            [ STATUS: PENDING AUDIT VERIFICATION ]
+                        </div>
+                        <h3 class="font-headline-sm font-bold text-lg text-text-primary uppercase">
+                            Pembayaran Anda Sedang Diverifikasi
+                        </h3>
+                        <p class="font-body-base text-text-secondary text-sm mt-1 max-w-xl">
+                            Anda memiliki transaksi aktif sebesar <strong class="text-text-primary font-label-code">Rp {{ number_format($pendingTransaction->nominal, 0, ',', '.') }}</strong> yang menunggu persetujuan admin. Harap tunggu proses audit sebelum mengajukan pembayaran baru.
+                        </p>
+                        <div class="mt-4">
+                            <a href="{{ route('member.transactions') }}" 
+                               class="inline-flex items-center gap-2 px-4 py-2 bg-surface-container hover:bg-surface-container-high border border-border-subtle text-text-primary font-label-code text-xs uppercase tracking-wider rounded transition-all">
+                                <span class="material-symbols-outlined text-sm">receipt_long</span>
+                                <span>LIHAT LEDGER TRANSAKSI</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @else
+            <!-- Bank Transfer Vault Card -->
+            <div class="bg-surface-vault border border-border-default rounded p-6 mb-8 backdrop-blur-md">
+                <div class="flex items-center gap-2 pb-3 border-b border-border-default mb-4">
+                    <span class="material-symbols-outlined text-primary-container text-base">account_balance</span>
+                    <h3 class="font-headline-sm font-bold text-xs uppercase tracking-wider text-text-primary">
+                        DESTINASI TRANSFER BANK RESMI
+                    </h3>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 font-label-code">
+                    <div class="p-3 bg-surface-container-lowest border border-border-default rounded">
+                        <span class="text-[10px] text-text-muted uppercase font-label-meta block">NAMA BANK</span>
+                        <span class="text-text-primary font-bold text-base">{{ $bankInfo['bank'] }}</span>
+                    </div>
+                    <div class="p-3 bg-surface-container-lowest border border-border-default rounded">
+                        <span class="text-[10px] text-text-muted uppercase font-label-meta block">NOMOR REKENING</span>
+                        <span class="text-primary-container font-extrabold text-lg tracking-wider">{{ $bankInfo['account_number'] }}</span>
+                    </div>
+                    <div class="p-3 bg-surface-container-lowest border border-border-default rounded">
+                        <span class="text-[10px] text-text-muted uppercase font-label-meta block">ATAS NAMA</span>
+                        <span class="text-text-primary font-bold text-base">{{ $bankInfo['account_name'] }}</span>
+                    </div>
+                </div>
             </div>
 
-            <!-- Pending Transaction Notice -->
-            @if($pendingTransaction)
-                <div class="bg-yellow-900/50 border border-yellow-500 rounded-2xl p-6 mb-8">
-                    <div class="flex items-center gap-4">
-                        <div class="text-4xl">⏳</div>
-                        <div>
-                            <h3 class="text-xl font-bold text-yellow-400">Pembayaran Sedang Diproses</h3>
-                            <p class="text-yellow-200">
-                                Anda memiliki pembayaran pending sebesar Rp {{ number_format($pendingTransaction->nominal, 0, ',', '.') }}.
-                                Harap tunggu verifikasi admin sebelum membuat pembayaran baru.
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            @else
-                <!-- Bank Info -->
-                <div class="bg-gray-800 rounded-2xl p-6 mb-8 border border-gray-700">
-                    <h3 class="text-xl font-bold text-white mb-4">🏦 Informasi Transfer</h3>
-                    <div class="bg-gray-700 rounded-xl p-4">
-                        <p class="text-gray-300"><span class="text-gray-500">Bank:</span> {{ $bankInfo['bank'] }}</p>
-                        <p class="text-gray-300"><span class="text-gray-500">No. Rekening:</span> 
-                            <span class="font-mono text-cyan-400 text-xl">{{ $bankInfo['account_number'] }}</span>
-                        </p>
-                        <p class="text-gray-300"><span class="text-gray-500">Atas Nama:</span> {{ $bankInfo['account_name'] }}</p>
-                    </div>
-                </div>
+            <!-- Form -->
+            <form action="{{ route('member.payment.store') }}" method="POST" enctype="multipart/form-data" class="space-y-8">
+                @csrf
 
-                <!-- Payment Form -->
-                <form action="{{ route('member.payment.store') }}" method="POST" enctype="multipart/form-data">
-                    @csrf
+                <!-- Package Selection -->
+                <div class="bg-surface-vault border border-border-default rounded p-6 backdrop-blur-md">
+                    <div class="flex items-center gap-2 pb-3 border-b border-border-default mb-4">
+                        <span class="material-symbols-outlined text-primary-container text-base">inventory_2</span>
+                        <h3 class="font-headline-sm font-bold text-xs uppercase tracking-wider text-text-primary">
+                            PILIH DURASI PAKET MEMBERSHIP
+                        </h3>
+                    </div>
 
-                    <!-- Package Selection -->
-                    <div class="mb-8">
-                        <h3 class="text-xl font-bold text-white mb-4">📦 Pilih Paket Membership</h3>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            @foreach($packages as $duration => $package)
-                                <label class="relative cursor-pointer">
-                                    <input type="radio" name="durasi_bulan" value="{{ $duration }}" 
-                                           class="peer sr-only" {{ $duration == 1 ? 'checked' : '' }}>
-                                    <div class="bg-gray-800 rounded-2xl p-6 border-2 border-gray-700 
-                                                peer-checked:border-cyan-500 peer-checked:bg-gray-700
-                                                hover:border-gray-500 transition-all">
-                                        @if($package->discount_percentage > 0)
-                                            <span class="absolute top-4 right-4 bg-gradient-to-r from-cyan-500 to-purple-500 
-                                                         text-white text-xs font-bold px-3 py-1 rounded-full">
-                                                HEMAT {{ $package->discount_percentage }}%
-                                            </span>
-                                        @endif
-                                        <h4 class="text-2xl font-bold text-white mb-2">{{ $package->name }}</h4>
-                                        <p class="text-3xl font-bold text-cyan-400">
-                                            Rp {{ number_format($package->discounted_price, 0, ',', '.') }}
-                                        </p>
-                                        <p class="text-gray-400 text-sm mt-2">
-                                            {{ $package->formatted_price_per_month }}
-                                        </p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        @foreach($packages as $duration => $package)
+                            <label class="relative cursor-pointer group">
+                                <input type="radio" name="durasi_bulan" value="{{ $duration }}" 
+                                       class="peer sr-only" {{ $duration == 1 ? 'checked' : '' }}>
+                                <div class="bg-surface-card border-2 border-border-default rounded p-5 peer-checked:border-primary-container peer-checked:bg-primary-hover-subtle peer-checked:shadow-[0_0_20px_rgba(184,246,0,0.15)] group-hover:border-border-subtle transition-all relative overflow-hidden">
+                                    @if($package->discount_percentage > 0)
+                                        <span class="absolute top-3 right-3 bg-primary-container text-surface-container-lowest text-[10px] font-label-code uppercase tracking-wider font-extrabold px-2 py-0.5 rounded">
+                                            HEMAT {{ $package->discount_percentage }}%
+                                        </span>
+                                    @endif
+                                    <div class="font-label-tag text-[10px] text-text-muted tracking-widest uppercase mb-1">
+                                        {{ $duration }} BULAN FULL ACCESS
                                     </div>
-                                </label>
-                            @endforeach
-                        </div>
-                        @error('durasi_bulan')
-                            <p class="text-red-500 text-sm mt-2">{{ $message }}</p>
-                        @enderror
-                    </div>
-
-                    <!-- Upload Proof -->
-                    <div class="mb-8">
-                        <h3 class="text-xl font-bold text-white mb-4">📸 Upload Bukti Transfer</h3>
-                        <div class="bg-gray-800 rounded-2xl p-6 border-2 border-dashed border-gray-600 
-                                    hover:border-cyan-500 transition-all text-center">
-                            <input type="file" name="bukti_transfer" id="bukti_transfer" 
-                                   accept="image/*" class="hidden" onchange="previewImage(this)">
-                            <label for="bukti_transfer" class="cursor-pointer block">
-                                <div id="preview-container" class="hidden mb-4">
-                                    <img id="preview-image" class="max-h-64 mx-auto rounded-lg">
-                                </div>
-                                <div id="upload-placeholder">
-                                    <div class="text-5xl mb-4">📤</div>
-                                    <p class="text-gray-300 font-medium">Klik untuk upload bukti transfer</p>
-                                    <p class="text-gray-500 text-sm mt-2">PNG, JPG maksimal 5MB</p>
+                                    <h4 class="font-headline-sm font-extrabold text-xl text-text-primary mb-2">
+                                        {{ $package->name }}
+                                    </h4>
+                                    <div class="font-headline-lg font-extrabold text-2xl text-primary-container">
+                                        Rp {{ number_format($package->discounted_price, 0, ',', '.') }}
+                                    </div>
+                                    <div class="font-label-meta text-xs text-text-secondary mt-1">
+                                        {{ $package->formatted_price_per_month }}
+                                    </div>
                                 </div>
                             </label>
-                        </div>
-                        @error('bukti_transfer')
-                            <p class="text-red-500 text-sm mt-2">{{ $message }}</p>
-                        @enderror
+                        @endforeach
+                    </div>
+                    @error('durasi_bulan')
+                        <p class="text-status-error font-label-code text-xs mt-3">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <!-- Proof Upload Box -->
+                <div class="bg-surface-vault border border-border-default rounded p-6 backdrop-blur-md">
+                    <div class="flex items-center gap-2 pb-3 border-b border-border-default mb-4">
+                        <span class="material-symbols-outlined text-primary-container text-base">upload_file</span>
+                        <h3 class="font-headline-sm font-bold text-xs uppercase tracking-wider text-text-primary">
+                            UNGGAH BUKTI TRANSFER PEMBAYARAN
+                        </h3>
                     </div>
 
-                    <!-- Submit Button -->
-                    <button type="submit" 
-                            class="w-full bg-gradient-to-r from-cyan-500 to-purple-500 text-white py-4 rounded-xl 
-                                   font-bold text-lg hover:opacity-90 transition-all hover:scale-[1.02] shadow-lg">
-                        🚀 Submit Pembayaran
-                    </button>
-                </form>
-            @endif
+                    <div class="border-2 border-dashed border-border-default hover:border-primary-container rounded p-8 text-center transition-all bg-surface-container-lowest/50">
+                        <input type="file" name="bukti_transfer" id="bukti_transfer" 
+                               accept="image/*" class="hidden" onchange="previewImage(this)">
+                        <label for="bukti_transfer" class="cursor-pointer block">
+                            <div id="preview-container" class="hidden mb-4">
+                                <img id="preview-image" class="max-h-64 mx-auto rounded border border-border-default shadow-lg">
+                            </div>
+                            <div id="upload-placeholder">
+                                <span class="material-symbols-outlined text-4xl text-primary-container mb-2">add_photo_alternate</span>
+                                <p class="font-headline-sm font-bold text-sm text-text-primary uppercase tracking-wider">
+                                    KLIK UNTUK UNGGAH STRUK / BUKTI TRANSFER
+                                </p>
+                                <p class="font-label-meta text-[11px] text-text-muted mt-1">
+                                    Mendukung format JPG, PNG, WEBP (Maksimal 5MB)
+                                </p>
+                            </div>
+                        </label>
+                    </div>
+                    @error('bukti_transfer')
+                        <p class="text-status-error font-label-code text-xs mt-3">{{ $message }}</p>
+                    @enderror
+                </div>
 
-            <!-- Back Button -->
-            <div class="mt-6 text-center">
-                <a href="{{ route('member.dashboard') }}" class="text-gray-400 hover:text-white transition-all">
-                    ← Kembali ke Dashboard
-                </a>
-            </div>
+                <!-- Action Button -->
+                <button type="submit" 
+                        class="w-full py-4 bg-primary-container hover:bg-primary-fixed text-surface-container-lowest font-headline-sm text-sm uppercase tracking-wider font-extrabold rounded neon-glow-btn transition-all flex items-center justify-center gap-2">
+                    <span class="material-symbols-outlined text-lg">check_circle</span>
+                    <span>KIRIM KONFIRMASI PEMBAYARAN</span>
+                </button>
+            </form>
+        @endif
+
+        <div class="mt-8 text-center">
+            <a href="{{ route('member.dashboard') }}" class="font-label-code text-xs text-text-muted hover:text-text-primary uppercase tracking-wider transition-all">
+                &larr; KEMBALI KE ATHLETE DASHBOARD
+            </a>
         </div>
+
     </div>
 
     <script>
@@ -122,7 +170,7 @@
                 reader.onload = function(e) {
                     document.getElementById('preview-image').src = e.target.result;
                     document.getElementById('preview-container').classList.remove('hidden');
-                    document.getElementById('upload-placeholder').innerHTML = '<p class="text-cyan-400">Klik untuk ganti gambar</p>';
+                    document.getElementById('upload-placeholder').innerHTML = '<span class="material-symbols-outlined text-3xl text-primary-container mb-1">sync</span><p class="font-label-code text-xs text-primary-container uppercase tracking-wider">Klik untuk mengganti gambar terpilih</p>';
                 };
                 reader.readAsDataURL(input.files[0]);
             }

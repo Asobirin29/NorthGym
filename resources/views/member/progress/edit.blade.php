@@ -1,192 +1,219 @@
 <x-app-layout>
-    <div class="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900">
-        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            
-            <!-- Header -->
-            <div class="mb-8">
-                <h1 class="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-500">
-                    ✏️ Edit Progress
-                </h1>
-                <p class="text-gray-400 mt-2">Perbarui data progress Anda</p>
+    <div class="max-w-4xl mx-auto">
+        
+        <!-- Header -->
+        <div class="mb-8">
+            <div class="inline-flex items-center gap-2 px-3 py-1 bg-surface-glass border border-border-default mb-3 backdrop-blur-md rounded">
+                <span class="w-1.5 h-1.5 bg-primary-container rounded-none pulse-volt"></span>
+                <span class="font-label-tag text-label-tag text-text-muted tracking-widest uppercase">
+                    [ EDIT PROTOCOL // KINETIC PROGRESSION ]
+                </span>
             </div>
+            <h1 class="text-display-section-mobile md:text-headline-lg font-headline-lg font-extrabold uppercase tracking-tight text-text-primary">
+                EDIT LOG <span class="text-primary-container">PROGRESS</span>.
+            </h1>
+            <p class="font-body-base text-text-secondary text-sm md:text-base mt-2">
+                Perbarui data antropometri dan rekaman visual tanggal {{ $progress->tanggal->format('d M Y') }}.
+            </p>
+        </div>
 
-            <!-- Form -->
-            <form action="{{ route('member.progress.update', $progress) }}" method="POST" enctype="multipart/form-data" class="space-y-6">
-                @csrf
-                @method('PUT')
+        <!-- Form -->
+        <form action="{{ route('member.progress.update', $progress) }}" method="POST" enctype="multipart/form-data" class="space-y-6">
+            @csrf
+            @method('PUT')
 
+            <!-- Date & Workout Type -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <!-- Date -->
-                <div class="bg-gray-800 rounded-2xl p-6 border border-gray-700">
-                    <label class="block text-white font-bold mb-2">📅 Tanggal</label>
+                <div class="bg-surface-vault border border-border-default rounded p-6 backdrop-blur-md">
+                    <label class="block font-label-code text-xs uppercase tracking-wider text-text-primary mb-2">
+                        TANGGAL LOGGING *
+                    </label>
                     <input type="date" name="tanggal" value="{{ old('tanggal', $progress->tanggal->format('Y-m-d')) }}" 
-                           class="w-full bg-gray-700 border border-gray-600 rounded-xl px-4 py-3 text-white 
-                                  focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-all" required>
+                           class="w-full bg-surface-container-low border border-border-subtle rounded px-4 py-3 text-text-primary font-label-code text-sm focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-all" required>
                     @error('tanggal')
-                        <p class="text-red-500 text-sm mt-2">{{ $message }}</p>
+                        <p class="text-status-error font-label-code text-xs mt-2">{{ $message }}</p>
                     @enderror
                 </div>
 
-                <!-- Workout Type Selector -->
-                <div class="bg-gray-800 rounded-2xl p-6 border border-gray-700">
-                    <label class="block text-white font-bold mb-2">🏋️ Tipe Latihan</label>
-                    <div id="workout-type-selector" class="space-y-4">
+                <!-- Workout Type -->
+                <div class="bg-surface-vault border border-border-default rounded p-6 backdrop-blur-md">
+                    <label class="block font-label-code text-xs uppercase tracking-wider text-text-primary mb-2">
+                        TIPE LATIHAN UTAMA
+                    </label>
+                    <div class="flex gap-2">
                         <select name="workout_type_id" id="workoutTypeSelect" 
-                                class="w-full bg-gray-700 border border-gray-600 rounded-xl px-4 py-3 text-white 
-                                       focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-all">
-                            <option value="">-- Pilih Tipe Latihan (Opsional) --</option>
+                                class="flex-1 bg-surface-container-low border border-border-subtle rounded px-4 py-3 text-text-primary font-label-code text-sm focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-all">
+                            <option value="">-- PILIH TIPE (OPSIONAL) --</option>
                         </select>
-                        
                         <button type="button" id="addCustomTypeBtn"
-                                class="w-full bg-purple-700 hover:bg-purple-600 text-white px-4 py-3 rounded-xl font-medium transition-all">
-                            + Tambah Tipe Latihan Kustom
+                                class="px-4 py-2 bg-surface-container hover:bg-surface-container-high border border-border-subtle hover:border-primary-container text-primary-container rounded font-label-code text-xs uppercase tracking-wider transition-all whitespace-nowrap">
+                            + KUSTOM
                         </button>
                     </div>
                     <input type="hidden" name="custom_workout_type_id" id="customWorkoutTypeId">
                 </div>
+            </div>
 
-                <!-- Body Measurements -->
-                <div class="bg-gray-800 rounded-2xl p-6 border border-gray-700">
-                    <h3 class="text-lg font-bold text-white mb-4">📏 Ukuran Tubuh</h3>
-                    <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
-                        <div>
-                            <label class="block text-gray-400 text-sm mb-2">Berat Badan (kg)</label>
-                            <input type="number" name="berat_badan" value="{{ old('berat_badan', $progress->berat_badan) }}" step="0.01"
-                                   class="w-full bg-gray-700 border border-gray-600 rounded-xl px-4 py-3 text-white 
-                                          focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-all"
-                                   placeholder="70.5">
-                        </div>
-                        <div>
-                            <label class="block text-gray-400 text-sm mb-2">Tinggi Badan (cm)</label>
-                            <input type="number" name="tinggi_badan" value="{{ old('tinggi_badan', $progress->tinggi_badan) }}" step="0.01"
-                                   class="w-full bg-gray-700 border border-gray-600 rounded-xl px-4 py-3 text-white 
-                                          focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-all"
-                                   placeholder="175">
-                        </div>
-                        <div>
-                            <label class="block text-gray-400 text-sm mb-2">Lingkar Perut (cm)</label>
-                            <input type="number" name="lingkar_perut" value="{{ old('lingkar_perut', $progress->lingkar_perut) }}" step="0.01"
-                                   class="w-full bg-gray-700 border border-gray-600 rounded-xl px-4 py-3 text-white 
-                                          focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-all"
-                                   placeholder="80">
-                        </div>
-                        <div>
-                            <label class="block text-gray-400 text-sm mb-2">Lingkar Dada (cm)</label>
-                            <input type="number" name="lingkar_dada" value="{{ old('lingkar_dada', $progress->lingkar_dada) }}" step="0.01"
-                                   class="w-full bg-gray-700 border border-gray-600 rounded-xl px-4 py-3 text-white 
-                                          focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-all"
-                                   placeholder="95">
-                        </div>
-                        <div>
-                            <label class="block text-gray-400 text-sm mb-2">Lingkar Lengan (cm)</label>
-                            <input type="number" name="lingkar_lengan" value="{{ old('lingkar_lengan', $progress->lingkar_lengan) }}" step="0.01"
-                                   class="w-full bg-gray-700 border border-gray-600 rounded-xl px-4 py-3 text-white 
-                                          focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-all"
-                                   placeholder="35">
-                        </div>
+            <!-- Body Measurements Grid -->
+            <div class="bg-surface-vault border border-border-default rounded p-6 backdrop-blur-md">
+                <div class="flex items-center gap-2 pb-3 border-b border-border-default mb-4">
+                    <span class="material-symbols-outlined text-primary-container text-base">straighten</span>
+                    <h3 class="font-headline-sm font-bold text-xs uppercase tracking-wider text-text-primary">
+                        DATA UKURAN FISIK & LINGKAR
+                    </h3>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <div>
+                        <label class="block font-label-meta text-[11px] text-text-muted uppercase tracking-wider mb-2">
+                            BERAT BADAN (KG)
+                        </label>
+                        <input type="number" name="berat_badan" value="{{ old('berat_badan', $progress->berat_badan) }}" step="0.01"
+                               class="w-full bg-surface-container-low border border-border-subtle rounded px-4 py-3 text-text-primary font-label-code text-sm focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-all"
+                               placeholder="70.5">
+                    </div>
+                    <div>
+                        <label class="block font-label-meta text-[11px] text-text-muted uppercase tracking-wider mb-2">
+                            TINGGI BADAN (CM)
+                        </label>
+                        <input type="number" name="tinggi_badan" value="{{ old('tinggi_badan', $progress->tinggi_badan) }}" step="0.01"
+                               class="w-full bg-surface-container-low border border-border-subtle rounded px-4 py-3 text-text-primary font-label-code text-sm focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-all"
+                               placeholder="175">
+                    </div>
+                    <div>
+                        <label class="block font-label-meta text-[11px] text-text-muted uppercase tracking-wider mb-2">
+                            LINGKAR PERUT (CM)
+                        </label>
+                        <input type="number" name="lingkar_perut" value="{{ old('lingkar_perut', $progress->lingkar_perut) }}" step="0.01"
+                               class="w-full bg-surface-container-low border border-border-subtle rounded px-4 py-3 text-text-primary font-label-code text-sm focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-all"
+                               placeholder="80">
+                    </div>
+                    <div>
+                        <label class="block font-label-meta text-[11px] text-text-muted uppercase tracking-wider mb-2">
+                            LINGKAR DADA (CM)
+                        </label>
+                        <input type="number" name="lingkar_dada" value="{{ old('lingkar_dada', $progress->lingkar_dada) }}" step="0.01"
+                               class="w-full bg-surface-container-low border border-border-subtle rounded px-4 py-3 text-text-primary font-label-code text-sm focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-all"
+                               placeholder="95">
+                    </div>
+                    <div>
+                        <label class="block font-label-meta text-[11px] text-text-muted uppercase tracking-wider mb-2">
+                            LINGKAR LENGAN (CM)
+                        </label>
+                        <input type="number" name="lingkar_lengan" value="{{ old('lingkar_lengan', $progress->lingkar_lengan) }}" step="0.01"
+                               class="w-full bg-surface-container-low border border-border-subtle rounded px-4 py-3 text-text-primary font-label-code text-sm focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-all"
+                               placeholder="35">
                     </div>
                 </div>
+            </div>
 
-                <!-- Current Photos -->
-                @if($progress->foto_before_path || $progress->foto_after_path)
-                    <div class="bg-gray-800 rounded-2xl p-6 border border-gray-700">
-                        <h3 class="text-lg font-bold text-white mb-4">📸 Foto Saat Ini</h3>
-                        <div class="flex gap-4">
-                            @if($progress->foto_before_path)
-                                <div>
-                                    <p class="text-gray-400 text-sm mb-2">Before</p>
-                                    <img src="{{ Storage::url($progress->foto_before_path) }}" 
-                                         alt="Before" class="w-32 h-32 object-cover rounded-lg">
-                                </div>
-                            @endif
-                            @if($progress->foto_after_path)
-                                <div>
-                                    <p class="text-gray-400 text-sm mb-2">After</p>
-                                    <img src="{{ Storage::url($progress->foto_after_path) }}" 
-                                         alt="After" class="w-32 h-32 object-cover rounded-lg">
-                                </div>
-                            @endif
-                        </div>
+            <!-- Current Photos Display -->
+            @if($progress->foto_before_path || $progress->foto_after_path)
+                <div class="bg-surface-vault border border-border-default rounded p-6 backdrop-blur-md">
+                    <div class="flex items-center gap-2 pb-3 border-b border-border-default mb-4">
+                        <span class="material-symbols-outlined text-primary-container text-base">collections</span>
+                        <h3 class="font-headline-sm font-bold text-xs uppercase tracking-wider text-text-primary">
+                            FOTO TERSIMPAN SAAT INI
+                        </h3>
                     </div>
-                @endif
-
-                <!-- Photos -->
-                <div class="bg-gray-800 rounded-2xl p-6 border border-gray-700">
-                    <h3 class="text-lg font-bold text-white mb-4">📸 Ganti Foto (Opsional)</h3>
-                    <div class="grid grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-gray-400 text-sm mb-2">Foto Before</label>
-                            <input type="file" name="foto_before" accept="image/*"
-                                   class="w-full bg-gray-700 border border-gray-600 rounded-xl px-4 py-3 text-white 
-                                          file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0
-                                          file:bg-cyan-600 file:text-white file:cursor-pointer">
-                        </div>
-                        <div>
-                            <label class="block text-gray-400 text-sm mb-2">Foto After</label>
-                            <input type="file" name="foto_after" accept="image/*"
-                                   class="w-full bg-gray-700 border border-gray-600 rounded-xl px-4 py-3 text-white 
-                                          file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0
-                                          file:bg-purple-600 file:text-white file:cursor-pointer">
-                        </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        @if($progress->foto_before_path)
+                            <div class="p-3 bg-surface-container-lowest border border-border-default rounded">
+                                <span class="font-label-meta text-[10px] text-text-muted uppercase block mb-2">BEFORE PHOTO</span>
+                                <img src="{{ Storage::url($progress->foto_before_path) }}" 
+                                     alt="Before" class="w-full h-44 object-cover rounded border border-border-default">
+                            </div>
+                        @endif
+                        @if($progress->foto_after_path)
+                            <div class="p-3 bg-surface-container-lowest border border-border-default rounded">
+                                <span class="font-label-meta text-[10px] text-primary-container uppercase block mb-2">AFTER PHOTO</span>
+                                <img src="{{ Storage::url($progress->foto_after_path) }}" 
+                                     alt="After" class="w-full h-44 object-cover rounded border border-border-default">
+                            </div>
+                        @endif
                     </div>
                 </div>
+            @endif
 
-                <!-- Notes -->
-                <div class="bg-gray-800 rounded-2xl p-6 border border-gray-700">
-                    <label class="block text-white font-bold mb-2">📝 Catatan</label>
-                    <textarea name="catatan" rows="3"
-                              class="w-full bg-gray-700 border border-gray-600 rounded-xl px-4 py-3 text-white 
-                                     focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-all resize-none"
-                              placeholder="Bagaimana perasaan Anda hari ini?">{{ old('catatan', $progress->catatan) }}</textarea>
+            <!-- Replace Photos (Optional) -->
+            <div class="bg-surface-vault border border-border-default rounded p-6 backdrop-blur-md">
+                <div class="flex items-center gap-2 pb-3 border-b border-border-default mb-4">
+                    <span class="material-symbols-outlined text-primary-container text-base">photo_camera</span>
+                    <h3 class="font-headline-sm font-bold text-xs uppercase tracking-wider text-text-primary">
+                        UNGGAH / GANTI FOTO (OPSIONAL)
+                    </h3>
                 </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div class="p-4 bg-surface-container-lowest border border-border-default rounded">
+                        <label class="block font-label-code text-xs uppercase tracking-wider text-text-primary mb-2">GANTI FOTO BEFORE</label>
+                        <input type="file" name="foto_before" accept="image/*"
+                               class="w-full bg-surface-container-low border border-border-subtle rounded px-3 py-2 text-text-secondary font-label-code text-xs file:mr-3 file:py-1.5 file:px-3 file:rounded file:border-0 file:bg-surface-container file:text-text-primary file:font-bold hover:file:bg-surface-container-high cursor-pointer">
+                    </div>
+                    <div class="p-4 bg-surface-container-lowest border border-border-default rounded">
+                        <label class="block font-label-code text-xs uppercase tracking-wider text-text-primary mb-2">GANTI FOTO AFTER</label>
+                        <input type="file" name="foto_after" accept="image/*"
+                               class="w-full bg-surface-container-low border border-border-subtle rounded px-3 py-2 text-text-secondary font-label-code text-xs file:mr-3 file:py-1.5 file:px-3 file:rounded file:border-0 file:bg-primary-container file:text-surface-container-lowest file:font-bold hover:file:bg-primary-fixed cursor-pointer">
+                    </div>
+                </div>
+            </div>
 
-                <!-- Submit -->
+            <!-- Notes -->
+            <div class="bg-surface-vault border border-border-default rounded p-6 backdrop-blur-md">
+                <label class="block font-label-code text-xs uppercase tracking-wider text-text-primary mb-2">
+                    CATATAN PERFORMA & EVALUASI
+                </label>
+                <textarea name="catatan" rows="3"
+                          class="w-full bg-surface-container-low border border-border-subtle rounded px-4 py-3 text-text-primary font-label-code text-sm focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-all resize-none"
+                          placeholder="Catatan update progress...">{{ old('catatan', $progress->catatan) }}</textarea>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex items-center gap-4">
                 <button type="submit" 
-                        class="w-full bg-gradient-to-r from-cyan-500 to-purple-500 text-white py-4 rounded-xl 
-                               font-bold text-lg hover:opacity-90 transition-all hover:scale-[1.02] shadow-lg">
-                    💾 Update Progress
+                        class="flex-1 py-4 bg-primary-container hover:bg-primary-fixed text-surface-container-lowest font-label-code text-sm uppercase tracking-wider font-extrabold rounded neon-glow-btn transition-all flex items-center justify-center gap-2">
+                    <span class="material-symbols-outlined text-base">save</span>
+                    <span>UPDATE LOG PROGRESS</span>
                 </button>
-            </form>
-
-            <!-- Back Button -->
-            <div class="mt-6 text-center">
-                <a href="{{ route('member.progress.index') }}" class="text-gray-400 hover:text-white transition-all">
-                    ← Kembali ke Progress
+                <a href="{{ route('member.progress.index') }}" 
+                   class="px-6 py-4 bg-surface-container hover:bg-surface-container-high border border-border-subtle text-text-muted hover:text-text-primary font-label-code text-sm uppercase tracking-wider rounded transition-all">
+                    BATAL
                 </a>
             </div>
-        </div>
+        </form>
+
     </div>
 
     <!-- Custom Workout Type Modal -->
-    <div id="customWorkoutModal" class="hidden fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50">
-        <div class="bg-gray-800 rounded-2xl p-6 max-w-md w-full mx-4 border border-gray-700">
-            <h3 class="text-xl font-bold text-white mb-4">+ Tambah Tipe Latihan Kustom</h3>
-            <div class="space-y-4">
+    <div id="customWorkoutModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+        <div class="bg-surface-vault border border-border-default rounded p-6 max-w-md w-full shadow-2xl">
+            <h3 class="font-headline-sm font-bold text-base text-text-primary uppercase mb-4">
+                + TAMBAH TIPE LATIHAN KUSTOM
+            </h3>
+            <div class="space-y-4 font-label-code">
                 <div>
-                    <label class="block text-gray-400 text-sm mb-2">Nama Latihan</label>
+                    <label class="block text-text-muted text-xs uppercase tracking-wider mb-2">Nama Latihan</label>
                     <input type="text" id="customWorkoutName" 
-                           class="w-full bg-gray-700 border border-gray-600 rounded-xl px-4 py-3 text-white 
-                                  focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-all"
-                           placeholder="e.g. Calisthenics">
+                           class="w-full bg-surface-container-low border border-border-subtle rounded px-4 py-2.5 text-text-primary text-sm focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-all"
+                           placeholder="Misal: Calisthenics / Hyrox">
                 </div>
                 <div>
-                    <label class="block text-gray-400 text-sm mb-2">Kategori</label>
+                    <label class="block text-text-muted text-xs uppercase tracking-wider mb-2">Kategori</label>
                     <select id="customWorkoutCategory" 
-                            class="w-full bg-gray-700 border border-gray-600 rounded-xl px-4 py-3 text-white 
-                                   focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-all">
-                        <option value="cardio">🏃 Cardio</option>
-                        <option value="strength">💪 Strength</option>
-                        <option value="flexibility">🧘 Flexibility</option>
-                        <option value="other" selected>🏋️ Other</option>
+                            class="w-full bg-surface-container-low border border-border-subtle rounded px-4 py-2.5 text-text-primary text-sm focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-all">
+                        <option value="cardio">Cardio</option>
+                        <option value="strength">Strength</option>
+                        <option value="flexibility">Flexibility</option>
+                        <option value="other" selected>Other</option>
                     </select>
                 </div>
-                <div class="flex gap-2">
+                <div class="flex gap-3 pt-2">
                     <button type="button" id="saveCustomType"
-                            class="flex-1 bg-gradient-to-r from-cyan-500 to-purple-500 text-white px-4 py-3 rounded-xl font-bold hover:opacity-90 transition-all">
-                        Simpan
+                            class="flex-1 py-2.5 bg-primary-container text-surface-container-lowest font-bold uppercase tracking-wider rounded text-xs transition-all">
+                        SIMPAN
                     </button>
                     <button type="button" id="cancelCustomType"
-                            class="flex-1 bg-gray-700 text-white px-4 py-3 rounded-xl font-bold hover:bg-gray-600 transition-all">
-                        Batal
+                            class="flex-1 py-2.5 bg-surface-container hover:bg-surface-container-high border border-border-subtle text-text-muted hover:text-text-primary rounded text-xs transition-all">
+                        BATAL
                     </button>
                 </div>
             </div>
@@ -195,51 +222,45 @@
 
     @push('scripts')
     <script>
-        // Load workout types
+        const currentWorkoutTypeId = {{ $progress->workout_type_id ?? 'null' }};
+        const currentCustomWorkoutTypeId = {{ $progress->custom_workout_type_id ?? 'null' }};
+
         async function loadWorkoutTypes() {
             try {
                 const response = await fetch('{{ route("member.workout-types.index") }}');
                 const data = await response.json();
                 
                 const select = document.getElementById('workoutTypeSelect');
-                select.innerHTML = '<option value="">-- Pilih Tipe Latihan (Opsional) --</option>';
+                select.innerHTML = '<option value="">-- PILIH TIPE (OPSIONAL) --</option>';
                 
-                // Default types
                 if (data.default && data.default.length > 0) {
                     const defaultGroup = document.createElement('optgroup');
-                    defaultGroup.label = 'Tipe Latihan Default';
+                    defaultGroup.label = 'TIPE LATIHAN DEFAULT';
                     data.default.forEach(type => {
                         const option = document.createElement('option');
                         option.value = type.id;
-                        option.textContent = `${type.icon} ${type.name}`;
+                        option.textContent = `${type.name}`;
                         option.dataset.isCustom = 'false';
-                        
-                        // Pre-select if matches current progress
-                        if ({{ $progress->workout_type_id ?? 'null' }} == type.id) {
+                        if (currentWorkoutTypeId && currentWorkoutTypeId === type.id) {
                             option.selected = true;
                         }
-                        
                         defaultGroup.appendChild(option);
                     });
                     select.appendChild(defaultGroup);
                 }
                 
-                // Custom types
                 if (data.custom && data.custom.length > 0) {
                     const customGroup = document.createElement('optgroup');
-                    customGroup.label = 'Tipe Latihan Kustom';
+                    customGroup.label = 'TIPE LATIHAN KUSTOM';
                     data.custom.forEach(type => {
                         const option = document.createElement('option');
                         option.value = type.id;
-                        option.textContent = `${type.icon} ${type.name}`;
+                        option.textContent = `${type.name}`;
                         option.dataset.isCustom = 'true';
-                        
-                        // Pre-select if matches current progress
-                        if ({{ $progress->custom_workout_type_id ?? 'null' }} == type.id) {
+                        if (currentCustomWorkoutTypeId && currentCustomWorkoutTypeId === type.id) {
                             option.selected = true;
                             document.getElementById('customWorkoutTypeId').value = type.id;
                         }
-                        
                         customGroup.appendChild(option);
                     });
                     select.appendChild(customGroup);
@@ -249,35 +270,31 @@
             }
         }
 
-        // Handle workout type selection
         document.getElementById('workoutTypeSelect').addEventListener('change', function() {
             const selectedOption = this.options[this.selectedIndex];
-            const isCustom = selectedOption.dataset.isCustom === 'true';
-            
-            if (isCustom) {
-                document.getElementById('customWorkoutTypeId').value = this.value;
-                this.value = '';
+            const customInput = document.getElementById('customWorkoutTypeId');
+            if (selectedOption && selectedOption.dataset.isCustom === 'true') {
+                customInput.value = this.value;
             } else {
-                document.getElementById('customWorkoutTypeId').value = '';
+                customInput.value = '';
             }
         });
 
-        // Modal handlers
-        document.getElementById('addCustomTypeBtn').addEventListener('click', () => {
+        document.getElementById('addCustomTypeBtn').addEventListener('click', function() {
             document.getElementById('customWorkoutModal').classList.remove('hidden');
+        });
+
+        document.getElementById('cancelCustomType').addEventListener('click', function() {
+            document.getElementById('customWorkoutModal').classList.add('hidden');
             document.getElementById('customWorkoutName').value = '';
         });
 
-        document.getElementById('cancelCustomType').addEventListener('click', () => {
-            document.getElementById('customWorkoutModal').classList.add('hidden');
-        });
-
-        document.getElementById('saveCustomType').addEventListener('click', async () => {
+        document.getElementById('saveCustomType').addEventListener('click', async function() {
             const name = document.getElementById('customWorkoutName').value.trim();
             const category = document.getElementById('customWorkoutCategory').value;
             
             if (!name) {
-                alert('Nama latihan harus diisi!');
+                alert('Nama latihan harus diisi');
                 return;
             }
             
@@ -291,26 +308,24 @@
                     body: JSON.stringify({ name, category })
                 });
                 
-                const result = await response.json();
+                const data = await response.json();
                 
-                if (result.success) {
-                    document.getElementById('customWorkoutModal').classList.add('hidden');
+                if (response.ok) {
                     await loadWorkoutTypes();
-                    
-                    // Auto-select the newly created type
-                    document.getElementById('customWorkoutTypeId').value = result.workout_type.id;
-                    document.getElementById('workoutTypeSelect').value = '';
+                    document.getElementById('workoutTypeSelect').value = data.id;
+                    document.getElementById('customWorkoutTypeId').value = data.id;
+                    document.getElementById('customWorkoutModal').classList.add('hidden');
+                    document.getElementById('customWorkoutName').value = '';
                 } else {
-                    alert('Gagal menambahkan tipe latihan');
+                    alert(data.message || 'Gagal menyimpan tipe latihan');
                 }
             } catch (error) {
-                console.error('Error:', error);
-                alert('Terjadi kesalahan');
+                console.error('Error saving custom workout type:', error);
+                alert('Terjadi kesalahan saat menyimpan');
             }
         });
 
-        // Load on page load
-        loadWorkoutTypes();
+        document.addEventListener('DOMContentLoaded', loadWorkoutTypes);
     </script>
     @endpush
 </x-app-layout>

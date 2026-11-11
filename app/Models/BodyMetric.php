@@ -11,6 +11,8 @@ class BodyMetric extends Model
 {
     use HasFactory;
 
+    protected $table = 'member_body_metrics';
+
     protected $fillable = [
         'user_id',
         'weight',

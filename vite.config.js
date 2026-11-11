@@ -15,5 +15,4 @@ export default defineConfig({
             ignored: ['**/storage/framework/views/**'],
         },
     },
-    base: '/NorthGym/public/', // Add base path for subdirectory support
 });

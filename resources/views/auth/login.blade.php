@@ -1,82 +1,546 @@
 <!DOCTYPE html>
-<html lang="id" class="dark">
+<html class="dark" lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Masuk - North Gym</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>NorthGym // APEX LAB — Member Login Protocol</title>
+
+    <!-- Google Fonts: Plus Jakarta Sans, Inter, Geist -->
+    <link href="https://fonts.googleapis.com" rel="preconnect"/>
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600&family=Plus+Jakarta+Sans:wght@700;800&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <!-- Tailwind Theme Configuration Verbatim from Stitch -->
+    <script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                "on-tertiary": "#243240",
+                "background": "#131313",
+                "tertiary": "#ffffff",
+                "primary-fixed-dim": "#a1d800",
+                "error-container": "#93000a",
+                "on-primary-fixed": "#141f00",
+                "text-muted": "rgba(255, 255, 255, 0.40)",
+                "primary-fixed": "#b8f600",
+                "primary": "#ffffff",
+                "secondary-fixed-dim": "#c8c6c5",
+                "surface-container-high": "#2a2a2a",
+                "on-background": "#e5e2e1",
+                "tertiary-fixed-dim": "#bac8da",
+                "surface-bright": "#3a3939",
+                "primary-container": "#b8f600",
+                "inverse-surface": "#e5e2e1",
+                "surface-vault": "rgba(10, 10, 10, 0.85)",
+                "text-tertiary": "rgba(255, 255, 255, 0.25)",
+                "status-warning-container": "rgba(255, 184, 0, 0.15)",
+                "surface-container-low": "#1c1b1b",
+                "text-primary": "#FFFFFF",
+                "status-warning": "#FFB800",
+                "on-error-container": "#ffdad6",
+                "status-error": "#FF2A54",
+                "secondary-fixed": "#e5e2e1",
+                "surface-container-highest": "#353534",
+                "error": "#ffb4ab",
+                "status-error-container": "rgba(255, 42, 84, 0.15)",
+                "on-surface": "#e5e2e1",
+                "text-secondary": "rgba(255, 255, 255, 0.75)",
+                "surface": "#131313",
+                "surface-variant": "#353534",
+                "surface-card": "rgba(20, 20, 20, 0.75)",
+                "tertiary-fixed": "#d6e4f7",
+                "primary-glow": "rgba(191, 255, 0, 0.35)",
+                "on-primary": "#263500",
+                "outline": "#8d9479",
+                "surface-glass": "rgba(15, 15, 15, 0.65)",
+                "on-tertiary-container": "#586676",
+                "on-surface-variant": "#c3caac",
+                "on-secondary-container": "#bab8b7",
+                "border-subtle": "rgba(255, 255, 255, 0.12)",
+                "secondary-container": "#4a4949",
+                "on-tertiary-fixed": "#0f1d2a",
+                "on-primary-fixed-variant": "#384e00",
+                "on-secondary-fixed-variant": "#474646",
+                "surface-dim": "#131313",
+                "inverse-on-surface": "#313030",
+                "on-secondary": "#313030",
+                "on-secondary-fixed": "#1c1b1b",
+                "secondary": "#c8c6c5",
+                "outline-variant": "#434933",
+                "on-primary-container": "#506e00",
+                "inverse-primary": "#4b6700",
+                "surface-container": "#201f1f",
+                "surface-container-lowest": "#0e0e0e",
+                "primary-glow-diffuse": "rgba(191, 255, 0, 0.15)",
+                "border-default": "rgba(255, 255, 255, 0.08)",
+                "surface-tint": "#a1d800",
+                "primary-hover-subtle": "rgba(191, 255, 0, 0.05)",
+                "tertiary-container": "#d6e4f7",
+                "on-error": "#690005",
+                "on-tertiary-fixed-variant": "#3b4857"
+              },
+              "borderRadius": {
+                "DEFAULT": "0.125rem",
+                "lg": "0.25rem",
+                "xl": "0.5rem",
+                "full": "0.75rem"
+              },
+              "spacing": {
+                "margin": "1rem",
+                "space-lg": "1.5rem",
+                "space-xl": "2rem",
+                "margin-desktop": "2rem",
+                "space-xs": "0.25rem",
+                "space-sm": "0.5rem",
+                "gutter": "1rem",
+                "space-md": "1rem",
+                "gutter-desktop": "2rem"
+              },
+              "fontFamily": {
+                "display-hero": ["Plus Jakarta Sans", "sans-serif"],
+                "body-base": ["Inter", "sans-serif"],
+                "label-tag": ["Geist", "monospace"],
+                "label-code": ["Geist", "monospace"],
+                "headline-lg": ["Plus Jakarta Sans", "sans-serif"],
+                "body-sm": ["Inter", "sans-serif"],
+                "display-hero-mobile": ["Plus Jakarta Sans", "sans-serif"],
+                "headline-sm": ["Plus Jakarta Sans", "sans-serif"],
+                "body-light": ["Inter", "sans-serif"],
+                "display-section": ["Plus Jakarta Sans", "sans-serif"],
+                "display-section-mobile": ["Plus Jakarta Sans", "sans-serif"],
+                "headline-md": ["Plus Jakarta Sans", "sans-serif"],
+                "label-meta": ["Geist", "monospace"]
+              },
+              "fontSize": {
+                "display-hero": ["88px", { "lineHeight": "82px", "letterSpacing": "-0.05em", "fontWeight": "800" }],
+                "body-base": ["16px", { "lineHeight": "26px", "letterSpacing": "0em", "fontWeight": "400" }],
+                "label-tag": ["11px", { "lineHeight": "16px", "letterSpacing": "0.25em", "fontWeight": "600" }],
+                "label-code": ["13px", { "lineHeight": "18px", "letterSpacing": "0.08em", "fontWeight": "500" }],
+                "headline-lg": ["44px", { "lineHeight": "48px", "letterSpacing": "-0.04em", "fontWeight": "800" }],
+                "body-sm": ["13px", { "lineHeight": "20px", "letterSpacing": "0em", "fontWeight": "400" }],
+                "display-hero-mobile": ["42px", { "lineHeight": "40px", "letterSpacing": "-0.04em", "fontWeight": "800" }],
+                "headline-sm": ["24px", { "lineHeight": "30px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                "body-light": ["15px", { "lineHeight": "24px", "letterSpacing": "0em", "fontWeight": "300" }],
+                "display-section": ["56px", { "lineHeight": "56px", "letterSpacing": "-0.05em", "fontWeight": "800" }],
+                "display-section-mobile": ["32px", { "lineHeight": "34px", "letterSpacing": "-0.04em", "fontWeight": "800" }],
+                "headline-md": ["36px", { "lineHeight": "40px", "letterSpacing": "-0.03em", "fontWeight": "800" }],
+                "label-meta": ["10px", { "lineHeight": "14px", "letterSpacing": "0.2em", "fontWeight": "500" }]
+              }
+            }
+          }
+        }
+    </script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
-        body { font-family: 'Inter', sans-serif; }
+        /* Kinetic Brutalist scanline & grid texture */
+        .bg-grid-telemetry {
+          background-size: 32px 32px;
+          background-image: linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                            linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+        }
+        
+        .glow-volt-primary {
+          box-shadow: 0 0 25px rgba(191, 255, 0, 0.45);
+        }
+
+        .glow-volt-subtle {
+          box-shadow: 0 0 16px rgba(191, 255, 0, 0.2);
+        }
+
+        .focus-glow:focus-within {
+          box-shadow: 0 4px 14px -2px rgba(191, 255, 0, 0.35);
+          border-color: #b8f600;
+        }
+
+        /* Industrial corner bracket accents */
+        .corner-brackets {
+          position: relative;
+        }
+        .corner-brackets::before,
+        .corner-brackets::after {
+          content: '';
+          position: absolute;
+          width: 8px;
+          height: 8px;
+          border-color: #b8f600;
+          pointer-events: none;
+        }
+        .corner-brackets::before {
+          top: -1px;
+          left: -1px;
+          border-top: 2px solid;
+          border-left: 2px solid;
+        }
+        .corner-brackets::after {
+          bottom: -1px;
+          right: -1px;
+          border-bottom: 2px solid;
+          border-right: 2px solid;
+        }
+
+        /* Ambient pulse dot */
+        @keyframes pulse-volt {
+          0%, 100% { opacity: 1; transform: scale(1); filter: drop-shadow(0 0 4px #b8f600); }
+          50% { opacity: 0.4; transform: scale(0.85); filter: drop-shadow(0 0 1px #b8f600); }
+        }
+        .status-pulse {
+          animation: pulse-volt 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
     </style>
 </head>
-<body class="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900 flex items-center justify-center p-4">
-    <div class="w-full max-w-md">
-        <!-- Logo -->
-        <div class="text-center mb-8">
-            <div class="w-20 h-20 mx-auto rounded-full bg-gradient-to-r from-cyan-500 to-purple-500 flex items-center justify-center mb-4">
-                <span class="text-white font-bold text-4xl">N</span>
-            </div>
-            <h1 class="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-500">
-                North Gym
-            </h1>
-            <p class="text-gray-400 mt-2">Ubah Tubuh Anda, Ubah Hidup Anda</p>
-        </div>
+<body class="bg-surface-container-lowest text-text-primary antialiased selection:bg-primary-container selection:text-surface-container-lowest min-h-screen flex flex-col justify-between overflow-x-hidden relative font-body-base bg-grid-telemetry">
 
-        <!-- Login Form -->
-        <div class="bg-gray-800/80 backdrop-blur-lg rounded-2xl p-8 border border-gray-700 shadow-2xl">
-            <h2 class="text-2xl font-bold text-white mb-6 text-center">Selamat Datang Kembali! 💪</h2>
+    <!-- Atmospheric Background Glows -->
+    <div class="fixed top-1/4 left-1/4 w-[500px] h-[500px] bg-primary-glow-diffuse rounded-full blur-[140px] pointer-events-none -z-10"></div>
+    <div class="fixed bottom-10 right-1/4 w-[420px] h-[420px] bg-primary-hover-subtle rounded-full blur-[160px] pointer-events-none -z-10"></div>
 
-            @if(isset($errors) && $errors->any())
-                <div class="bg-red-900/50 border border-red-500 text-red-300 px-4 py-3 rounded-xl mb-6">
-                    {{ $errors->first() }}
-                </div>
-            @endif
-
-            <form method="POST" action="{{ route('login') }}" class="space-y-6">
-                @csrf
-
-                <div>
-                    <label class="block text-gray-400 text-sm mb-2">Email</label>
-                    <input type="email" name="email" value="{{ old('email') }}" required autofocus
-                           class="w-full bg-gray-700 border border-gray-600 rounded-xl px-4 py-3 text-white 
-                                  focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-all"
-                           placeholder="email@example.com">
-                </div>
-
-                <div>
-                    <label class="block text-gray-400 text-sm mb-2">Kata Sandi</label>
-                    <input type="password" name="password" required
-                           class="w-full bg-gray-700 border border-gray-600 rounded-xl px-4 py-3 text-white 
-                                  focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-all"
-                           placeholder="••••••••">
-                </div>
-
-                <div class="flex items-center">
-                    <input type="checkbox" name="remember" id="remember" 
-                           class="rounded border-gray-600 bg-gray-700 text-cyan-500 focus:ring-cyan-500">
-                    <label for="remember" class="ml-2 text-gray-400 text-sm">Ingat saya</label>
-                </div>
-
-                <button type="submit" 
-                        class="w-full bg-gradient-to-r from-cyan-500 to-purple-500 text-white py-4 rounded-xl 
-                               font-bold text-lg hover:opacity-90 transition-all hover:scale-[1.02] shadow-lg">
-                    Masuk
-                </button>
-            </form>
-
-            <p class="text-center text-gray-400 mt-6">
-                Belum punya akun? 
-                <a href="{{ route('register') }}" class="text-cyan-400 hover:text-cyan-300 font-medium">
-                    Daftar Sekarang
+    <!-- TOP NAV BAR -->
+    <header class="docked full-width top-0 sticky z-50 bg-surface-glass backdrop-blur-md border-b border-border-default shadow-none">
+        <div class="flex justify-between items-center w-full px-margin-desktop max-w-7xl mx-auto h-20">
+            <!-- Brand Logo Anchor -->
+            <div class="flex items-center gap-space-md">
+                <a class="text-headline-sm font-headline-sm font-extrabold uppercase tracking-tight text-text-primary flex items-center gap-2 group" href="{{ url('/') }}">
+                    <span class="w-2.5 h-2.5 bg-primary-container rounded-full status-pulse"></span>
+                    <span>NORTHGYM<span class="text-primary-container">//</span>APEX</span>
                 </a>
-            </p>
-        </div>
+                <span class="hidden lg:inline-flex items-center gap-1.5 px-2 py-0.5 rounded border border-border-subtle bg-surface-vault text-label-tag font-label-tag text-text-muted">
+                    <span class="w-1.5 h-1.5 rounded-full bg-primary-container status-pulse"></span>
+                    SYS.V2.4 ACTIVE
+                </span>
+            </div>
 
-        <!-- Footer -->
-        <p class="text-center text-gray-500 text-sm mt-8">
-            &copy; {{ date('Y') }} North Gym. Hak cipta dilindungi.
-        </p>
-    </div>
+            <!-- Navigation Links (Desktop) -->
+            <nav class="hidden md:flex items-center gap-8">
+                <a class="text-text-muted font-label-code text-label-code tracking-widest hover:text-text-primary transition-colors duration-200" href="{{ url('/#programs') }}">01. PROGRAMS</a>
+                <a class="text-text-muted font-label-code text-label-code tracking-widest hover:text-text-primary transition-colors duration-200" href="{{ url('/#biometrics') }}">02. BIOMETRICS</a>
+                <a class="text-text-muted font-label-code text-label-code tracking-widest hover:text-text-primary transition-colors duration-200" href="{{ url('/#membership') }}">03. MEMBERSHIP</a>
+                <a class="text-text-muted font-label-code text-label-code tracking-widest hover:text-text-primary transition-colors duration-200" href="{{ url('/#locations') }}">04. LOCATIONS</a>
+            </nav>
+
+            <!-- Trailing Action Cluster with Active MEMBER LOGIN State -->
+            <div class="flex items-center gap-space-md">
+                <a class="text-primary-container font-label-code text-label-code tracking-widest border-b-2 border-primary-container pb-1 transition-all" href="{{ route('login') }}">
+                    MEMBER LOGIN
+                </a>
+                <a class="hidden sm:inline-flex items-center justify-center px-4 py-2 border border-primary-container text-primary-container font-label-code text-label-code hover:bg-primary-container hover:text-surface-container-lowest transition-all duration-200 uppercase font-semibold" href="{{ route('register') }}">
+                    JOIN THE CULT
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CANVAS: 50/50 SPLIT SCREEN ARCHITECTURE -->
+    <main class="flex-grow w-full max-w-7xl mx-auto px-4 md:px-margin-desktop py-space-md md:py-space-xl grid grid-cols-1 lg:grid-cols-12 gap-gutter-desktop items-center">
+        
+        <!-- LEFT PANEL: Visual, Athlete Motivation & Live Telemetry Preview (Col 1 to 6) -->
+        <section class="lg:col-span-6 relative flex flex-col justify-between h-full min-h-[580px] lg:min-h-[720px] rounded-lg border border-border-default bg-surface-vault overflow-hidden p-6 md:p-10">
+            <!-- High Contrast Gym Photography Background Layer -->
+            <div class="absolute inset-0 z-0">
+                <div class="w-full h-full bg-cover bg-center brightness-[0.38] contrast-[1.25]" 
+                     style="background-image: url('{{ asset('images/auth/member-login-bg.jpg') }}')"></div>
+                <div class="absolute inset-0 bg-gradient-to-t from-surface-container-lowest via-surface-container-lowest/60 to-transparent"></div>
+                <div class="absolute inset-0 bg-grid-telemetry pointer-events-none"></div>
+            </div>
+
+            <!-- Top Overlay: Telemetry Coordinate Label -->
+            <div class="relative z-10 flex items-center justify-between">
+                <span class="font-label-code text-label-meta text-primary-container tracking-widest uppercase bg-surface-vault/90 px-3 py-1 border border-border-subtle rounded">
+                    [ TELEMETRY PROTOCOL: ACTIVE // JKT-NODE-01 ]
+                </span>
+                <div class="flex items-center gap-1.5 text-text-muted font-label-code text-label-meta">
+                    <span class="w-2 h-2 rounded-full bg-primary-container status-pulse"></span>
+                    REALTIME 1000HZ
+                </div>
+            </div>
+
+            <!-- Mid Overlay: Giant Kinetic Typography -->
+            <div class="relative z-10 my-auto py-8">
+                <p class="font-label-tag text-label-tag text-text-muted tracking-[0.3em] uppercase mb-3">BIOMECHANICAL ARCHITECTURE</p>
+                <h1 class="font-headline-lg text-headline-lg font-extrabold uppercase tracking-tight text-text-primary leading-none">
+                    UNLOCK YOUR <br/>
+                    <span class="text-primary-container underline decoration-primary-container/40 underline-offset-8">METRICS.</span>
+                </h1>
+                <p class="mt-4 font-body-light text-body-light text-text-secondary max-w-md">
+                    Sinkronisasi kontinyu ambang batas biometrik, kurva daya neuromuskular, dan security token akses gym terpadu.
+                </p>
+            </div>
+
+            <!-- Bottom Overlay: Dual Bento Telemetry Badges -->
+            <div class="relative z-10 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <!-- WIDGET 1: ATHLETE DIGITAL PASS / QR GATE SYNC -->
+                <div class="p-4 rounded bg-surface-glass/90 backdrop-blur-md border border-border-subtle corner-brackets flex flex-col justify-between gap-3">
+                    <div class="flex items-center justify-between border-b border-border-default pb-2">
+                        <span class="font-label-tag text-label-tag text-text-primary tracking-wider flex items-center gap-1.5">
+                            <span class="material-symbols-outlined text-sm text-primary-container">qr_code_2</span>
+                            ATHLETE GATE PASS
+                        </span>
+                        <span class="font-label-meta text-label-meta text-primary-container uppercase px-1.5 py-0.5 bg-primary-container/10 border border-primary-container/30 rounded">
+                            SYNCED
+                        </span>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <!-- Simulated QR Graphic Matrix -->
+                        <div class="w-14 h-14 bg-surface-container-lowest p-1 border border-primary-container/40 rounded flex flex-wrap gap-0.5 justify-center items-center">
+                            <div class="w-3 h-3 bg-primary-container"></div>
+                            <div class="w-3 h-3 bg-text-primary"></div>
+                            <div class="w-3 h-3 bg-primary-container"></div>
+                            <div class="w-3 h-3 bg-text-primary"></div>
+                            <div class="w-3 h-3 bg-primary-container"></div>
+                            <div class="w-3 h-3 bg-text-primary"></div>
+                            <div class="w-3 h-3 bg-primary-container"></div>
+                            <div class="w-3 h-3 bg-primary-container"></div>
+                        </div>
+                        <div class="flex flex-col">
+                            <span class="font-label-meta text-label-meta text-text-muted">TIER STATUS</span>
+                            <span class="font-label-code text-label-code text-text-primary font-bold">PRO ATHLETE // 02</span>
+                            <span class="font-label-meta text-label-meta text-primary-container flex items-center gap-1 mt-0.5">
+                                <span class="material-symbols-outlined text-xs">contactless</span> NFC GATE ACTIVE
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- WIDGET 2: TELEMETRY METRICS FEED -->
+                <div class="p-4 rounded bg-surface-glass/90 backdrop-blur-md border border-border-subtle corner-brackets flex flex-col justify-between gap-2">
+                    <div class="flex items-center justify-between border-b border-border-default pb-2">
+                        <span class="font-label-tag text-label-tag text-text-primary tracking-wider flex items-center gap-1.5">
+                            <span class="material-symbols-outlined text-sm text-primary-container">vital_signs</span>
+                            TELEMETRY FEED
+                        </span>
+                        <span class="font-label-meta text-label-meta text-text-muted uppercase">LIVE VITAL</span>
+                    </div>
+                    <div class="grid grid-cols-2 gap-2 text-left pt-1">
+                        <div>
+                            <p class="font-label-meta text-label-meta text-text-muted">CALORIC BURN</p>
+                            <p class="font-label-code text-label-code font-bold text-text-primary">2,840 <span class="text-[10px] text-text-muted font-normal">KCAL</span></p>
+                        </div>
+                        <div>
+                            <p class="font-label-meta text-label-meta text-text-muted">LACTATE CLEAR</p>
+                            <p class="font-label-code text-label-code font-bold text-primary-container">1.8 <span class="text-[10px] text-text-muted font-normal">MMOL</span></p>
+                        </div>
+                        <div>
+                            <p class="font-label-meta text-label-meta text-text-muted">PEAK VELOCITY</p>
+                            <p class="font-label-code text-label-code font-bold text-text-primary">0.88 <span class="text-[10px] text-text-muted font-normal">M/S</span></p>
+                        </div>
+                        <div>
+                            <p class="font-label-meta text-label-meta text-text-muted">HRV RECOVERY</p>
+                            <p class="font-label-code text-label-code font-bold text-primary-container">94% <span class="text-[10px] text-text-muted font-normal">OPTIMAL</span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- RIGHT PANEL: Authentication Terminal Vault (Col 7 to 12) -->
+        <section class="lg:col-span-6 flex justify-center items-center py-6">
+            <!-- Vault Container with radial back-glow & corner brackets -->
+            <div class="relative w-full max-w-[460px] bg-surface-glass backdrop-blur-xl border border-border-subtle rounded-lg p-6 sm:p-9 corner-brackets">
+                <!-- Back-glow reflection behind vault -->
+                <div class="absolute -inset-1 bg-primary-glow-diffuse rounded-lg blur-xl opacity-30 -z-10 pointer-events-none"></div>
+
+                <!-- Terminal Header Pill -->
+                <div class="flex items-center justify-between mb-4">
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded bg-primary-container/10 border border-primary-container/30">
+                        <span class="w-1.5 h-1.5 rounded-full bg-primary-container status-pulse"></span>
+                        <span class="font-label-tag text-label-tag text-primary-container tracking-widest uppercase">
+                            PORTAL // ATHLETE AUTHENTICATION
+                        </span>
+                    </div>
+                    <span class="font-label-meta text-label-meta text-text-muted">SEC.LVL 03</span>
+                </div>
+
+                <!-- Headline & Subtext -->
+                <h2 class="font-headline-md text-headline-md font-extrabold uppercase tracking-tight text-text-primary">
+                    WELCOME BACK
+                </h2>
+                <p class="font-body-base text-body-sm text-text-muted mt-1 mb-6">
+                    Masukkan kredensial Anda untuk sinkronisasi pass latihan biometrik.
+                </p>
+
+                <!-- Validation Alerts (Error Display) -->
+                @if(isset($errors) && $errors->any())
+                    <div class="mb-5 p-3.5 bg-status-error-container border border-status-error/40 rounded flex items-start gap-2.5 text-status-error">
+                        <span class="material-symbols-outlined text-lg mt-0.5">warning</span>
+                        <div class="font-label-code text-xs">
+                            <span class="font-bold uppercase tracking-wider block mb-0.5">[ SYS.AUTH_ALERT ]</span>
+                            {{ $errors->first() }}
+                        </div>
+                    </div>
+                @endif
+
+                <!-- AUTHENTICATION FORM -->
+                <form method="POST" action="{{ route('login') }}" class="space-y-4">
+                    @csrf
+
+                    <!-- INPUT: MEMBER ID OR EMAIL -->
+                    <div class="space-y-1.5">
+                        <label class="block font-label-tag text-label-tag text-text-secondary uppercase tracking-[0.25em]" for="email">
+                            MEMBER ID OR EMAIL
+                        </label>
+                        <div class="relative rounded border @error('email') border-status-error @else border-border-subtle @enderror bg-surface-vault focus-glow transition-all duration-200">
+                            <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-text-muted">
+                                <span class="material-symbols-outlined text-lg">badge</span>
+                            </div>
+                            <input class="w-full h-[52px] bg-transparent pl-11 pr-4 text-text-primary font-label-code text-label-code placeholder:text-text-tertiary focus:outline-none border-none" 
+                                   id="email" 
+                                   name="email"
+                                   value="{{ old('email') }}" 
+                                   placeholder="ATH-8842 // member@northgym.test" 
+                                   required 
+                                   autofocus 
+                                   type="email"/>
+                        </div>
+                    </div>
+
+                    <!-- INPUT: PASSCODE -->
+                    <div class="space-y-1.5">
+                        <div class="flex items-center justify-between">
+                            <label class="block font-label-tag text-label-tag text-text-secondary uppercase tracking-[0.25em]" for="password">
+                                PASSCODE
+                            </label>
+                            <a class="font-label-tag text-label-tag text-text-muted hover:text-primary-container transition-colors" href="#">
+                                FORGOT?
+                            </a>
+                        </div>
+                        <div class="relative rounded border border-border-subtle bg-surface-vault focus-glow transition-all duration-200">
+                            <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-text-muted">
+                                <span class="material-symbols-outlined text-lg">key</span>
+                            </div>
+                            <input class="w-full h-[52px] bg-transparent pl-11 pr-11 text-text-primary font-label-code text-label-code placeholder:text-text-tertiary focus:outline-none border-none" 
+                                   id="password" 
+                                   name="password"
+                                   placeholder="••••••••••••••••" 
+                                   required 
+                                   type="password"/>
+                            <button class="absolute inset-y-0 right-0 pr-3.5 flex items-center text-text-muted hover:text-primary-container transition-colors" 
+                                    title="Toggle visibility" 
+                                    type="button"
+                                    onclick="togglePasswordVisibility()">
+                                <span class="material-symbols-outlined text-lg" id="password-toggle-icon">visibility</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- REMEMBER CHECKBOX -->
+                    <div class="flex items-start gap-2.5 pt-1">
+                        <input class="mt-0.5 w-4 h-4 rounded-none bg-surface-vault border-border-subtle text-primary-container focus:ring-0 focus:ring-offset-0 cursor-pointer accent-[#b8f600]" 
+                               id="remember" 
+                               name="remember" 
+                               type="checkbox"/>
+                        <label class="font-label-code text-label-meta text-text-muted cursor-pointer leading-tight select-none" for="remember">
+                            Keep session active for 30 days // Biometric Key Cache
+                        </label>
+                    </div>
+
+                    <!-- PRIMARY CTA BUTTON: High Voltage Volt Lime -->
+                    <button class="w-full h-[52px] bg-primary-container hover:bg-primary-fixed text-surface-container-lowest font-headline-sm text-label-code uppercase tracking-wider font-extrabold flex items-center justify-center gap-2 glow-volt-primary hover:scale-[1.01] active:scale-95 transition-all duration-200" 
+                            type="submit">
+                        <span>INITIALIZE SESSION</span>
+                        <span class="material-symbols-outlined font-bold text-lg">arrow_forward</span>
+                    </button>
+                </form>
+
+                <!-- ALTERNATIVE AUTH DIVIDER -->
+                <div class="relative my-6 text-center">
+                    <div class="absolute inset-0 flex items-center">
+                        <div class="w-full border-t border-border-default"></div>
+                    </div>
+                    <span class="relative px-3 bg-surface-vault font-label-tag text-label-tag text-text-muted uppercase tracking-[0.25em]">
+                        OR SYNC VIA PROTOCOL
+                    </span>
+                </div>
+
+                <!-- HARDWARE / SOCIAL PASSKEY AUTH BUTTONS -->
+                <div class="grid grid-cols-2 gap-3">
+                    <!-- Passkey: Apple -->
+                    <button class="h-11 px-3 rounded border border-border-subtle bg-surface-vault hover:border-primary-container hover:bg-primary-hover-subtle text-text-primary hover:text-primary-container flex items-center justify-center gap-2 transition-all duration-200 font-label-code text-label-code" type="button">
+                        <span class="material-symbols-outlined text-base">fingerprint</span>
+                        <span>PASSKEY</span>
+                    </button>
+                    <!-- Biometric: Google / FIDO2 -->
+                    <button class="h-11 px-3 rounded border border-border-subtle bg-surface-vault hover:border-primary-container hover:bg-primary-hover-subtle text-text-primary hover:text-primary-container flex items-center justify-center gap-2 transition-all duration-200 font-label-code text-label-code" type="button">
+                        <span class="material-symbols-outlined text-base">security</span>
+                        <span>BIOMETRIC ID</span>
+                    </button>
+                </div>
+
+                <!-- Vault Footer Membership Link -->
+                <div class="mt-6 pt-5 border-t border-border-default text-center">
+                    <p class="font-body-sm text-body-sm text-text-muted">
+                        Not a member yet? 
+                        <a class="text-primary-container font-label-code text-label-code font-semibold tracking-wider hover:underline ml-1 uppercase" href="{{ route('register') }}">
+                            [ APPLY FOR MEMBERSHIP ]
+                        </a>
+                    </p>
+                </div>
+
+                <!-- Security & Latency Footnote & Staff Terminal Link -->
+                <div class="mt-4 text-center space-y-2">
+                    <p class="font-label-meta text-label-meta text-text-tertiary tracking-widest uppercase">
+                        [ TLS-256 ENCRYPTED // NODE LATENCY: 0.02S // APEX OS V2.4 ]
+                    </p>
+                    <div>
+                        <a href="{{ route('login.admin') }}" class="inline-flex items-center gap-1 font-label-code text-[11px] text-text-muted hover:text-primary-container transition-colors tracking-widest uppercase">
+                            <span class="material-symbols-outlined text-[13px]">terminal</span>
+                            <span>[ STAFF // OPERATOR COMMAND TERMINAL → ]</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- BRUTALIST TECHNICAL FOOTER -->
+    <footer class="docked full-width bottom bg-surface-vault border-t border-border-default mt-8">
+        <div class="w-full px-margin-desktop py-space-xl max-w-7xl mx-auto flex flex-col gap-space-lg">
+            <!-- Upper Footer Grid -->
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-border-default pb-6">
+                <div class="flex items-center gap-2">
+                    <span class="text-headline-sm font-headline-sm font-extrabold tracking-wider text-text-primary">
+                        NORTHGYM<span class="text-primary-container">//</span>APEX LAB
+                    </span>
+                    <span class="font-label-meta text-label-meta text-text-muted">NORTHGYM HIGH-PERFORMANCE DIVISION</span>
+                </div>
+                <!-- Status Tag -->
+                <div class="flex items-center gap-2 px-2.5 py-1 bg-surface-container-low border border-border-subtle rounded font-label-code text-label-meta text-primary-container">
+                    <span class="w-1.5 h-1.5 rounded-full bg-primary-container status-pulse"></span>
+                    TERMINAL STATUS: ACTIVE
+                </div>
+            </div>
+
+            <!-- Links & Protocols -->
+            <div class="flex flex-wrap gap-y-2 gap-x-6 text-text-muted font-label-code text-label-code">
+                <a class="hover:text-primary-container transition-colors duration-200" href="{{ url('/') }}">PUBLIC PORTAL</a>
+                <a class="hover:text-primary-container transition-colors duration-200" href="#">PRIVACY PROTOCOL</a>
+                <a class="hover:text-primary-container transition-colors duration-200" href="#">SECURITY TLS-256</a>
+                <a class="hover:text-primary-container transition-colors duration-200" href="#">BIOMETRIC COMPLIANCE</a>
+                <a class="hover:text-primary-container transition-colors duration-200" href="#">TERMS OF EXECUTION</a>
+            </div>
+
+            <!-- Telemetry Coordinates & Copyright -->
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 text-text-tertiary font-label-meta text-label-meta">
+                <p>© {{ date('Y') }} NORTHGYM CORP. TELEMETRY COORD: [45.4215° N, 75.6972° W] // ALL RIGHTS RESERVED.</p>
+                <p class="font-label-code">RELEASE HASH: 0x9B42_AUTH</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Password visibility toggle script -->
+    <script>
+        function togglePasswordVisibility() {
+            const passwordInput = document.getElementById('password');
+            const toggleIcon = document.getElementById('password-toggle-icon');
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                toggleIcon.textContent = 'visibility_off';
+            } else {
+                passwordInput.type = 'password';
+                toggleIcon.textContent = 'visibility';
+            }
+        }
+    </script>
 </body>
 </html>

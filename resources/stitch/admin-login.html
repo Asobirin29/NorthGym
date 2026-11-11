@@ -1,0 +1,462 @@
+﻿<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>APEX//LAB â€” Admin Control Vault (/login/admin)</title>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Fonts: Plus Jakarta Sans, Inter, Geist -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500;600;700;800&amp;family=Inter:wght@300;400;500;600&amp;family=Plus+Jakarta+Sans:wght@700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "outline": "#8d9479",
+            "on-primary-fixed-variant": "#384e00",
+            "text-muted": "rgba(255, 255, 255, 0.40)",
+            "on-tertiary-fixed": "#0f1d2a",
+            "on-surface-variant": "#c3caac",
+            "status-error-container": "rgba(255, 42, 84, 0.15)",
+            "on-primary-fixed": "#141f00",
+            "on-surface": "#e5e2e1",
+            "primary-fixed": "#b8f600",
+            "on-background": "#e5e2e1",
+            "on-secondary-fixed": "#1c1b1b",
+            "on-error-container": "#ffdad6",
+            "on-secondary": "#313030",
+            "surface": "#131313",
+            "on-tertiary-fixed-variant": "#3b4857",
+            "primary-hover-subtle": "rgba(191, 255, 0, 0.05)",
+            "tertiary": "#ffffff",
+            "text-secondary": "rgba(255, 255, 255, 0.75)",
+            "status-error": "#FF2A54",
+            "secondary-fixed": "#e5e2e1",
+            "surface-container-high": "#2a2a2a",
+            "surface-bright": "#3a3939",
+            "on-error": "#690005",
+            "primary-fixed-dim": "#a1d800",
+            "border-subtle": "rgba(255, 255, 255, 0.12)",
+            "on-secondary-fixed-variant": "#474646",
+            "surface-container-low": "#1c1b1b",
+            "tertiary-fixed": "#d6e4f7",
+            "tertiary-container": "#d6e4f7",
+            "surface-container-lowest": "#0e0e0e",
+            "outline-variant": "#434933",
+            "surface-dim": "#131313",
+            "surface-card": "rgba(20, 20, 20, 0.75)",
+            "primary-glow": "rgba(191, 255, 0, 0.35)",
+            "secondary": "#c8c6c5",
+            "surface-vault": "rgba(10, 10, 10, 0.85)",
+            "primary-container": "#b8f600",
+            "status-warning-container": "rgba(255, 184, 0, 0.15)",
+            "on-secondary-container": "#bab8b7",
+            "on-primary-container": "#506e00",
+            "on-tertiary": "#243240",
+            "text-primary": "#FFFFFF",
+            "inverse-on-surface": "#313030",
+            "on-tertiary-container": "#586676",
+            "secondary-fixed-dim": "#c8c6c5",
+            "surface-tint": "#a1d800",
+            "inverse-surface": "#e5e2e1",
+            "surface-container": "#201f1f",
+            "primary-glow-diffuse": "rgba(191, 255, 0, 0.15)",
+            "inverse-primary": "#4b6700",
+            "error": "#ffb4ab",
+            "text-tertiary": "rgba(255, 255, 255, 0.25)",
+            "secondary-container": "#4a4949",
+            "surface-container-highest": "#353534",
+            "primary": "#ffffff",
+            "error-container": "#93000a",
+            "status-warning": "#FFB800",
+            "background": "#131313",
+            "tertiary-fixed-dim": "#bac8da",
+            "border-default": "rgba(255, 255, 255, 0.08)",
+            "surface-variant": "#353534",
+            "on-primary": "#263500",
+            "surface-glass": "rgba(15, 15, 15, 0.65)"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.125rem",
+            "lg": "0.25rem",
+            "xl": "0.5rem",
+            "full": "0.75rem"
+          },
+          "spacing": {
+            "gutter-desktop": "2rem",
+            "space-md": "1rem",
+            "margin": "1rem",
+            "space-lg": "1.5rem",
+            "gutter": "1rem",
+            "space-xl": "2rem",
+            "margin-desktop": "2rem",
+            "space-sm": "0.5rem",
+            "space-xs": "0.25rem"
+          },
+          "fontFamily": {
+            "body-sm": ["Inter"],
+            "display-section": ["Plus Jakarta Sans"],
+            "label-tag": ["Geist Mono", "monospace"],
+            "label-meta": ["Geist Mono", "monospace"],
+            "headline-md": ["Plus Jakarta Sans"],
+            "headline-lg": ["Plus Jakarta Sans"],
+            "label-code": ["Geist Mono", "monospace"],
+            "display-hero": ["Plus Jakarta Sans"],
+            "body-base": ["Inter"],
+            "body-light": ["Inter"],
+            "headline-sm": ["Plus Jakarta Sans"],
+            "display-section-mobile": ["Plus Jakarta Sans"],
+            "display-hero-mobile": ["Plus Jakarta Sans"]
+          },
+          "fontSize": {
+            "body-sm": ["13px", {"lineHeight": "20px", "letterSpacing": "0em", "fontWeight": "400"}],
+            "display-section": ["56px", {"lineHeight": "56px", "letterSpacing": "-0.05em", "fontWeight": "800"}],
+            "label-tag": ["11px", {"lineHeight": "16px", "letterSpacing": "0.25em", "fontWeight": "600"}],
+            "label-meta": ["10px", {"lineHeight": "14px", "letterSpacing": "0.2em", "fontWeight": "500"}],
+            "headline-md": ["36px", {"lineHeight": "40px", "letterSpacing": "-0.03em", "fontWeight": "800"}],
+            "headline-lg": ["44px", {"lineHeight": "48px", "letterSpacing": "-0.04em", "fontWeight": "800"}],
+            "label-code": ["13px", {"lineHeight": "18px", "letterSpacing": "0.08em", "fontWeight": "500"}],
+            "display-hero": ["88px", {"lineHeight": "82px", "letterSpacing": "-0.05em", "fontWeight": "800"}],
+            "body-base": ["16px", {"lineHeight": "26px", "letterSpacing": "0em", "fontWeight": "400"}],
+            "body-light": ["15px", {"lineHeight": "24px", "letterSpacing": "0em", "fontWeight": "300"}],
+            "headline-sm": ["24px", {"lineHeight": "30px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+            "display-section-mobile": ["32px", {"lineHeight": "34px", "letterSpacing": "-0.04em", "fontWeight": "800"}],
+            "display-hero-mobile": ["42px", {"lineHeight": "40px", "letterSpacing": "-0.04em", "fontWeight": "800"}]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      display: inline-block;
+      vertical-align: middle;
+      line-height: 1;
+    }
+    
+    /* Technical Grid Overlay */
+    .tactical-grid {
+      background-size: 32px 32px;
+      background-image: 
+        linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    }
+
+    /* Ambient noise tactile overlay */
+    .noise-overlay {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0.035;
+      pointer-events: none;
+      z-index: 9999;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+    }
+
+    /* Scanline pulse across button hover */
+    .btn-volt-scan {
+      position: relative;
+      overflow: hidden;
+    }
+    .btn-volt-scan::after {
+      content: '';
+      position: absolute;
+      top: -100%;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(180deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+      transition: all 0.6s ease;
+    }
+    .btn-volt-scan:hover::after {
+      top: 100%;
+    }
+
+    /* Custom caret & selection glow */
+    ::selection {
+      background-color: #b8f600;
+      color: #0e0e0e;
+    }
+  </style>
+</head>
+<body class="bg-surface-container-lowest text-on-background min-h-screen relative flex flex-col justify-between selection:bg-primary-container selection:text-surface-container-lowest font-body-base overflow-x-hidden antialiased">
+<!-- Atmospheric Tactile Noise Layer -->
+<div class="noise-overlay"></div>
+<!-- Cartesian Coordinate Grid Background -->
+<div class="fixed inset-0 tactical-grid pointer-events-none z-0"></div>
+<!-- Focused Radial Refraction Spotlight Pinned Directly Behind the Vault Card -->
+<div class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[680px] h-[680px] bg-primary-container opacity-[0.14] rounded-full blur-[140px] pointer-events-none z-0"></div>
+<!-- Secondary subtle ambient flare -->
+<div class="fixed top-10 right-1/4 w-[380px] h-[380px] bg-primary-container opacity-[0.05] rounded-full blur-[120px] pointer-events-none z-0"></div>
+<!-- TOP MINIMALIST SYSTEM TELEMETRY BAR -->
+<header class="w-full relative z-20 border-b border-border-default bg-surface-vault backdrop-blur-md">
+<div class="max-w-7xl mx-auto px-margin md:px-margin-desktop h-16 flex items-center justify-between">
+<!-- Brand & Admin System Node Tag -->
+<div class="flex items-center gap-space-sm">
+<a class="font-headline-sm text-headline-sm font-extrabold uppercase tracking-tight text-text-primary flex items-center gap-space-xs" href="#">
+          APEX//LAB
+        </a>
+<div class="hidden sm:flex items-center px-space-xs py-0.5 rounded-sm bg-surface-container border border-border-subtle">
+<span class="font-label-meta text-label-meta text-primary-container tracking-widest font-semibold">[ SYSTEM: CORE_ADMIN_V2.4 ]</span>
+</div>
+</div>
+<!-- Live Telemetry Status Indicators -->
+<div class="flex items-center gap-space-md sm:gap-space-lg">
+<!-- Live System Clock -->
+<div class="hidden md:flex items-center gap-space-xs font-label-code text-label-code text-text-muted">
+<span class="material-symbols-outlined text-[16px] text-text-muted" data-icon="schedule">schedule</span>
+<span class="text-text-secondary tracking-widest font-mono" id="live-utc-clock">14:32:08 UTC</span>
+</div>
+<!-- Connection Protocol & Pulsing Volt Dot -->
+<div class="flex items-center gap-2 px-space-sm py-1 rounded bg-surface-glass border border-border-default">
+<span class="relative flex h-2 w-2">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary-container opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2 w-2 bg-primary-container shadow-[0_0_8px_#b8f600]"></span>
+</span>
+<span class="font-label-meta text-label-meta tracking-wider text-text-primary hidden xs:inline">[ CONNECTION: ENCRYPTED_TLS ]</span>
+<span class="font-label-meta text-label-meta tracking-wider text-text-primary xs:hidden">[ TLS ]</span>
+</div>
+<!-- Root Security Clearance Badge -->
+<div class="hidden lg:flex items-center gap-1.5 px-space-sm py-1 rounded bg-surface-container-high border border-border-subtle">
+<span class="material-symbols-outlined text-[15px] text-primary-container" data-icon="verified_user">verified_user</span>
+<span class="font-label-meta text-label-meta text-text-primary tracking-widest font-bold">[ SEC.LEVEL 05 // ROOT ]</span>
+</div>
+</div>
+</div>
+</header>
+<!-- MAIN VAULT AUTHENTICATION CANVAS -->
+<main class="relative z-10 flex-1 flex items-center justify-center px-margin py-space-xl md:py-16">
+<div class="w-full max-w-[520px] mx-auto relative">
+<!-- Architectural Crosshairs & Coordinates around the Card Anchor -->
+<div class="absolute -top-3 -left-3 text-primary-container font-label-meta text-label-meta opacity-80 select-none pointer-events-none">
+        â”Œ [SEC-INSP//45.4215Â°N]
+      </div>
+<div class="absolute -top-3 -right-3 text-primary-container font-label-meta text-label-meta opacity-80 select-none pointer-events-none">
+        [AUTH_GATE] â”
+      </div>
+<div class="absolute -bottom-3 -left-3 text-text-muted font-label-meta text-label-meta opacity-60 select-none pointer-events-none">
+        â”” [CH-01]
+      </div>
+<div class="absolute -bottom-3 -right-3 text-text-muted font-label-meta text-label-meta opacity-60 select-none pointer-events-none">
+        [SYS-OP] â”˜
+      </div>
+<!-- COMMAND VAULT GLASS MODULE CARD -->
+<div class="relative bg-surface-vault backdrop-blur-xl border border-border-subtle rounded-lg p-6 sm:p-9 shadow-2xl transition-all duration-300">
+<!-- Machined Neon Corner L-Brackets (High-Voltage Kinetic Brutalism) -->
+<span class="absolute top-0 left-0 w-3.5 h-[2px] bg-primary-container"></span>
+<span class="absolute top-0 left-0 w-[2px] h-3.5 bg-primary-container"></span>
+<span class="absolute top-0 right-0 w-3.5 h-[2px] bg-primary-container"></span>
+<span class="absolute top-0 right-0 w-[2px] h-3.5 bg-primary-container"></span>
+<span class="absolute bottom-0 left-0 w-3.5 h-[2px] bg-primary-container"></span>
+<span class="absolute bottom-0 left-0 w-[2px] h-3.5 bg-primary-container"></span>
+<span class="absolute bottom-0 right-0 w-3.5 h-[2px] bg-primary-container"></span>
+<span class="absolute bottom-0 right-0 w-[2px] h-3.5 bg-primary-container"></span>
+<!-- Security Pill Badge -->
+<div class="inline-flex items-center gap-space-xs px-2.5 py-1 rounded bg-primary-hover-subtle border border-primary-container mb-space-md">
+<span class="material-symbols-outlined text-primary-container text-[14px]" data-icon="lock">lock</span>
+<span class="font-label-tag text-label-tag text-primary-container font-bold tracking-widest">
+            RESTRICTED ACCESS // STAFF &amp; OPERATORS ONLY
+          </span>
+</div>
+<!-- Main Title & Brutalist Context Header -->
+<div class="mb-space-lg">
+<h1 class="font-headline-lg text-headline-md sm:text-headline-lg font-extrabold uppercase tracking-tight text-text-primary flex items-center justify-between">
+<span>SYSTEM CONTROL</span>
+<span class="font-label-tag text-label-tag text-text-muted border border-border-default px-2 py-0.5 rounded">PORT: 8089</span>
+</h1>
+<p class="font-body-sm text-body-sm text-text-muted mt-space-xs">
+            Authorized personnel only. All login attempts and IP telemetry are logged to audit ledger.
+          </p>
+</div>
+<!-- AUTHENTICATION FORM -->
+<form class="space-y-space-md" onsubmit="event.preventDefault();">
+<!-- Tactical Role Selector Tabs (Segmented Control) -->
+<div class="space-y-space-xs">
+<div class="flex justify-between items-center">
+<label class="font-label-tag text-label-tag text-text-muted uppercase">ASSIGNED COMMAND ROLE</label>
+<span class="font-label-meta text-label-meta text-primary-container font-mono">[SYS_ROLE: VERIFIED]</span>
+</div>
+<div class="grid grid-cols-3 p-1 rounded-sm bg-surface-container-low border border-border-default gap-1" role="tablist">
+<button class="py-2 px-1 text-center font-label-meta text-label-meta font-bold tracking-wider text-text-muted hover:text-text-primary transition-colors border-b-2 border-transparent" type="button">
+                [ OPERATOR ]
+              </button>
+<button class="py-2 px-1 text-center font-label-meta text-label-meta font-bold tracking-wider text-text-muted hover:text-text-primary transition-colors border-b-2 border-transparent" type="button">
+                [ HEAD COACH ]
+              </button>
+<!-- Active Selection -->
+<button class="py-2 px-1 text-center font-label-meta text-label-meta font-bold tracking-wider text-text-primary border-b-2 border-primary-container bg-surface-glass shadow-[0_0_12px_rgba(191,255,0,0.15)] transition-all" type="button">
+                [ SUPER ADMIN ]
+              </button>
+</div>
+</div>
+<!-- Input 1: Operator Identifier / Badge Number -->
+<div class="space-y-1.5">
+<div class="flex justify-between items-center">
+<label class="font-label-tag text-label-tag text-text-secondary uppercase" for="badge-id">
+                OPERATOR IDENTIFIER / BADGE NUMBER
+              </label>
+<span class="font-label-meta text-label-meta text-text-muted font-mono">REQ. FIELD</span>
+</div>
+<div class="relative group">
+<div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-text-muted group-focus-within:text-primary-container transition-colors">
+<span class="material-symbols-outlined text-[19px]" data-icon="badge">badge</span>
+</div>
+<input class="w-full h-[52px] bg-surface-glass border border-border-subtle rounded-sm pl-11 pr-4 font-label-code text-label-code text-text-primary placeholder:text-text-muted/40 focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container focus:shadow-[0_0_15px_rgba(191,255,0,0.25)] transition-all tracking-wider" id="badge-id" placeholder="OP-0000-00 // BADGE" required="" type="text" value="OP-8821-X9 // BADGE_ID"/>
+<div class="absolute inset-y-0 right-0 pr-3.5 flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-[18px] text-primary-container" data-icon="check_circle">check_circle</span>
+</div>
+</div>
+</div>
+<!-- Input 2: Security Passphrase -->
+<div class="space-y-1.5">
+<div class="flex justify-between items-center">
+<label class="font-label-tag text-label-tag text-text-secondary uppercase" for="passphrase">
+                SECURITY PASSPHRASE
+              </label>
+<a class="font-label-meta text-label-meta text-primary-container hover:underline tracking-wider font-semibold transition-all" href="#">
+                RESET VIA RSA TOKEN
+              </a>
+</div>
+<div class="relative group">
+<div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-text-muted group-focus-within:text-primary-container transition-colors">
+<span class="material-symbols-outlined text-[19px]" data-icon="terminal">terminal</span>
+</div>
+<input class="w-full h-[52px] bg-surface-glass border border-border-subtle rounded-sm pl-11 pr-11 font-label-code text-label-code text-text-primary placeholder:text-text-muted/40 focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container focus:shadow-[0_0_15px_rgba(191,255,0,0.25)] tracking-widest transition-all" id="passphrase" placeholder="ENTER PASSPHRASE" required="" type="password" value="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"/>
+<button class="absolute inset-y-0 right-0 pr-3.5 flex items-center text-text-muted hover:text-primary-container transition-colors focus:outline-none" type="button">
+<span class="material-symbols-outlined text-[20px]" data-icon="visibility">visibility</span>
+</button>
+</div>
+</div>
+<!-- Input 3: Two-Factor Hardware Authenticator (2FA) -->
+<div class="space-y-2 pt-1">
+<div class="flex justify-between items-center">
+<label class="font-label-tag text-label-tag text-text-secondary uppercase">
+                AUTHENTICATOR TOKEN (6-DIGIT MFA / HARDWARE KEY)
+              </label>
+<div class="flex items-center gap-1 font-label-meta text-label-meta text-primary-container font-mono">
+<span class="material-symbols-outlined text-[13px]" data-icon="timer">timer</span>
+<span>24s</span>
+</div>
+</div>
+<!-- 6 Isolated Square Glass Inputs -->
+<div class="grid grid-cols-6 gap-2 sm:gap-2.5">
+<!-- Cell 1: Prefilled '8' -->
+<div class="h-[50px] sm:h-[54px] rounded-sm bg-surface-glass border border-border-subtle flex items-center justify-center font-label-code text-[20px] font-bold text-text-primary select-none">
+                8
+              </div>
+<!-- Cell 2: Prefilled '4' -->
+<div class="h-[50px] sm:h-[54px] rounded-sm bg-surface-glass border border-border-subtle flex items-center justify-center font-label-code text-[20px] font-bold text-text-primary select-none">
+                4
+              </div>
+<!-- Cell 3: Prefilled '2' -->
+<div class="h-[50px] sm:h-[54px] rounded-sm bg-surface-glass border border-border-subtle flex items-center justify-center font-label-code text-[20px] font-bold text-text-primary select-none">
+                2
+              </div>
+<!-- Cell 4: Active Glowing Focus Cell -->
+<div class="h-[50px] sm:h-[54px] rounded-sm bg-primary-hover-subtle border-2 border-primary-container shadow-[0_0_16px_rgba(191,255,0,0.4)] flex items-center justify-center relative">
+<span class="w-2.5 h-0.5 bg-primary-container animate-pulse"></span>
+</div>
+<!-- Cell 5: Empty Cell -->
+<div class="h-[50px] sm:h-[54px] rounded-sm bg-surface-glass border border-border-default flex items-center justify-center font-label-code text-[20px] text-text-muted/30">
+                â€¢
+              </div>
+<!-- Cell 6: Empty Cell -->
+<div class="h-[50px] sm:h-[54px] rounded-sm bg-surface-glass border border-border-default flex items-center justify-center font-label-code text-[20px] text-text-muted/30">
+                â€¢
+              </div>
+</div>
+</div>
+<!-- Secondary Telemetry Agreement Checkbox -->
+<div class="flex items-start gap-space-xs pt-1">
+<div class="relative flex items-center pt-0.5">
+<input checked="" class="w-4 h-4 rounded-sm bg-surface-container-high border-border-subtle text-primary-container focus:ring-0 focus:ring-offset-0 focus:outline-none cursor-pointer" id="telemetry-ack" type="checkbox"/>
+</div>
+<label class="font-label-meta text-label-meta text-text-muted select-none cursor-pointer leading-tight" for="telemetry-ack">
+              ENCRYPT TERMINAL SESSION // PERSIST TELEMETRY BUFFER TO HSM KEYSTORE
+            </label>
+</div>
+<!-- Primary Submit CTA: High-Voltage Light-Emitting Button -->
+<div class="pt-space-xs">
+<button class="btn-volt-scan w-full h-[52px] rounded-sm bg-primary-container text-surface-container-lowest font-headline-sm text-body-base font-extrabold uppercase tracking-tight flex items-center justify-center gap-space-xs transition-all duration-300 hover:scale-[1.01] hover:shadow-[0_0_28px_rgba(191,255,0,0.6)] active:scale-[0.98]" type="submit">
+<span>AUTHORIZE &amp; MOUNT DASHBOARD</span>
+<span class="material-symbols-outlined text-[20px] font-bold" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</div>
+</form>
+<!-- Bottom Card Cryptographic Telemetry -->
+<div class="mt-space-lg pt-space-md border-t border-border-default space-y-space-sm">
+<div class="font-label-meta text-label-meta text-text-muted font-mono leading-relaxed text-center break-all sm:break-normal">
+            [ TLS-256 CIPHER: AES_256_GCM // LATENCY: 12MS // AUDIT NODE: JKT-VAULT-01 ]
+          </div>
+<div class="text-center">
+<a class="inline-flex items-center gap-1 font-label-code text-label-code text-text-muted hover:text-primary-container transition-colors duration-200" href="#">
+<span class="material-symbols-outlined text-[15px]" data-icon="west">west</span>
+<span>[ RETURN TO PUBLIC ATHLETE PORTAL ]</span>
+</a>
+</div>
+</div>
+</div>
+<!-- Peripheral Card Badges & Hardware Tokens Status -->
+<div class="mt-space-md flex flex-col sm:flex-row justify-between items-center gap-2 px-space-xs font-label-meta text-label-meta text-text-muted font-mono">
+<div class="flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-primary-container"></span>
+<span>FIPS 140-3 LEVEL 4 CERTIFIED HSM</span>
+</div>
+<div>
+<span>SESSION NONCE: 0x9AF83E1C</span>
+</div>
+</div>
+</div>
+</main>
+<!-- TELEMETRY FOOTER (From Shared Components Blueprint) -->
+<footer class="w-full z-20 border-t border-border-default bg-surface-vault">
+<div class="w-full px-margin md:px-margin-desktop py-space-md md:py-space-lg max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-space-sm">
+<!-- System Telemetry Coordinates -->
+<div class="font-label-meta text-label-meta text-text-muted tracking-widest text-center sm:text-left">
+        TELEMETRY COORD: [45.4215Â° N, 75.6972Â° W] // OPERATIONAL NODE: ACTIVE // SECURE CRYPTO SESSION
+      </div>
+<!-- Legal & Protocol Links -->
+<div class="flex items-center gap-space-md font-label-code text-label-meta tracking-wider">
+<span class="text-primary-container">[ ROOT AUDIT ACTIVE ]</span>
+<a class="text-text-muted hover:text-primary-container transition-colors" href="#">SECURITY TLS-256</a>
+<a class="text-text-muted hover:text-primary-container transition-colors" href="#">TERMINAL POLICIES</a>
+</div>
+</div>
+</footer>
+<!-- Light Inline Vanilla JS for Micro-Interactions & Clock Sync -->
+<script>
+    // Live Telemetry Clock update (UTC)
+    function updateClock() {
+      const clockEl = document.getElementById('live-utc-clock');
+      if (clockEl) {
+        const now = new Date();
+        const hrs = String(now.getUTCHours()).padStart(2, '0');
+        const mins = String(now.getUTCMinutes()).padStart(2, '0');
+        const secs = String(now.getUTCSeconds()).padStart(2, '0');
+        clockEl.textContent = `${hrs}:${mins}:${secs} UTC`;
+      }
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+
+    // Micro interactive role selector state toggle
+    const roleButtons = document.querySelectorAll('[role="tablist"] button');
+    roleButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        roleButtons.forEach(b => {
+          b.className = 'py-2 px-1 text-center font-label-meta text-label-meta font-bold tracking-wider text-text-muted hover:text-text-primary transition-colors border-b-2 border-transparent';
+        });
+        btn.className = 'py-2 px-1 text-center font-label-meta text-label-meta font-bold tracking-wider text-text-primary border-b-2 border-primary-container bg-surface-glass shadow-[0_0_12px_rgba(191,255,0,0.15)] transition-all';
+      });
+    });
+  </script>
+</body></html>
